@@ -1,0 +1,57 @@
+.diagram {
+  display: block;
+  background: transparent;
+}
+
+.nut {
+  stroke: var(--text);
+}
+
+.fret {
+  stroke: var(--text-secondary);
+}
+
+.string {
+  stroke: var(--text-secondary);
+}
+
+.barre {
+  fill: var(--secondary);
+  opacity: 0.85;
+}
+
+.dot {
+  fill: var(--secondary);
+}
+
+.finger {
+  fill: var(--bg);
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-family);
+}
+
+.marker {
+  fill: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.openCircle {
+  fill: none;
+  stroke: var(--text-secondary);
+  stroke-width: 1.5;
+}
+
+.fretNum {
+  fill: var(--text-secondary);
+  font-size: 9px;
+  font-family: var(--font-family);
+}
+
+.label {
+  fill: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-family);
+}

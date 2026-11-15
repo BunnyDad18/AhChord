@@ -1,0 +1,228 @@
+.page {
+  max-width: 1180px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.h1 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-xlarge);
+}
+
+.headActions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.dirtyHint {
+  margin: 0 0 var(--space-1);
+  font-size: 13px;
+  color: var(--warning);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+@media (min-width: 900px) {
+  .columns {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: start;
+  }
+}
+
+/* Bug report #98: preview hidden → the editor takes the full width. */
+.columns.solo {
+  grid-template-columns: 1fr;
+}
+
+.metaGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.mbRow {
+  display: flex;
+  gap: var(--space-1);
+  align-items: flex-start;
+}
+
+.mbBtn {
+  flex-shrink: 0;
+  margin-top: 22px;
+}
+
+.mbError {
+  margin: 0;
+  font-size: 13px;
+  color: var(--error);
+}
+
+.mbList {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.mbItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mbItem:hover {
+  background: var(--border);
+}
+
+.label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.keyField {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ST-106: Key input + the "Detect from chords" button on one row. */
+.keyRow {
+  display: flex;
+  gap: var(--space-1);
+  align-items: flex-end;
+}
+
+/* ST-106: derived/override state line under the Key field. */
+.keyHint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.input {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+}
+
+.editorBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.editorHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.editor {
+  min-height: 320px;
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.fieldError {
+  margin: 0;
+  font-size: 13px;
+  color: var(--error);
+}
+
+.previewCol {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: var(--space-2);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.previewTitle {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  padding: var(--space-2);
+}
+
+.dialog {
+  width: min(440px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dialog h2 {
+  margin: 0;
+  font-size: var(--font-large);
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  margin-top: var(--space-1);
+}

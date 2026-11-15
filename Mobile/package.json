@@ -1,0 +1,17 @@
+{
+  "name": "ahchord-mobile",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Capacitor shell for the AhChord web app (MT-01 spike)",
+  "scripts": {
+    "build:web": "cd ../Frontend && npm run build",
+    "sync": "cap sync android"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.4"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/core": "^7.4.4"
+  }
+}

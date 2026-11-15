@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/BunnyDad18/AhChord/security/policy
+    about: Please report live exposures privately — see SECURITY.md, not a public issue.
+  - name: Deployment guide
+    url: https://github.com/BunnyDad18/AhChord/blob/main/docs/DEPLOYMENT.md
+    about: Setup, reverse proxy + TLS, backup/restore, troubleshooting — check here before filing.
+  - name: User guide
+    url: https://github.com/BunnyDad18/AhChord/tree/main/docs/user
+    about: How to use the app — player, setlists, import, mobile, FAQ.

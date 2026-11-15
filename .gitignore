@@ -1,0 +1,103 @@
+# ============ .NET / ASP.NET Core ============
+bin/
+obj/
+*.dll
+*.pdb
+*.deps.json
+*.runtimeconfig.json
+*.so
+*.exe
+*.exe.manifest
+Runtimes/
+
+# ============ IDEs ============
+*.user
+*.suo
+*.userosscache
+*.sln.docstate
+*.userprefs
+*.vspsdc
+*.pidb
+*.ipch
+*.bof
+.idea/
+.vs/
+.vscode/
+
+# ============ Docker ============
+docker-compose.override.yml
+.docker/
+
+# ============ Node.js / NPM / Vite ============
+node_modules/
+
+# Local tooling caches
+.ruff_cache/
+npm-debug.log*
+yarn-error.log*
+yarn.lock
+.pnp.*
+vite-env.d.ts
+*.local
+dist/
+build/
+out/
+
+# ============ Signing material — never commit (debug keystore, MT-05) ============
+Mobile/keystore/
+*.keystore
+*.jks
+
+# ============ Environment Files ============
+.env
+.env.local
+.env.production
+.env.development
+
+# ============ Database ============
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+/data/
+
+# ============ OS Files ============
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ============ Logs / Temp ============
+*.log
+logs/
+~$*
+*.bak
+*.tmp
+*.temp
+*.swp
+*.swpx
+
+# ============ API docs ============
+scalar.json
+scalar.config.json
+
+# ============ Session tooling ============
+.openchamber/
+.playwright-mcp/
+
+# Local dev settings — real credentials never committed (ST-sweep)
+WebApi/appsettings.Development.json
+WebApi/appsettings.*.Local.json
+*.pfx
+*.keystore
+Mobile/keystore/
+
+# Docs site (VitePress → GitHub Pages, ST-114)
+docs/site/node_modules/
+docs/site/.vitepress/dist/
+docs/site/.vitepress/cache/
+
+# AHC-5 secret sweep values — never committed (a sweep record must not be the leak, ST-98)
+scripts/publish-github.sweep

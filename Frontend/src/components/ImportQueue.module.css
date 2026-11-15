@@ -1,0 +1,182 @@
+/* ST-33: rendered inside the Import page's narrow sidebar (see .queueCol). */
+.queue {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: var(--space-2);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-medium);
+}
+
+/* ST-73: header row — the "Import all" button hugs the right edge. */
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-1);
+}
+
+.head .title {
+  margin: 0;
+}
+
+.head button {
+  margin-left: auto;
+}
+
+.activeBadge {
+  font-size: var(--font-small);
+  font-weight: 500;
+  color: var(--secondary);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ST-37 A2 / ST-39 B1: line one is the song name; line two has chip + time (left) and
+   actions (right) — one line, no wrapping (the queue column is wide enough). */
+.rowFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.chip {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.chip_queued {
+  color: var(--text-secondary);
+}
+
+.chip_running {
+  color: var(--secondary);
+  border-color: var(--secondary);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.chip_succeeded {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.chip_failed {
+  color: var(--error);
+  border-color: var(--error);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* ST-37 A2: the song name leads the card (its own row, truncates). */
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-small);
+  font-weight: 600;
+}
+
+/* ST-37 A2: status chip + elapsed time sit together under the title. */
+.metaGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.meta {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.rowError {
+  margin: 0;
+  font-size: var(--font-small);
+  color: var(--error);
+}
+
+.preview {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.previewToggle {
+  display: flex;
+  gap: 6px;
+}
+
+.previewRaw {
+  margin: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ST-70e: on phones the queue stacks full width — let the footer wrap instead of
+   squeezing chip + timestamp + three 44px actions onto one line. */
+@media (max-width: 639px) {
+  .rowFooter {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+}

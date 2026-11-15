@@ -1,0 +1,256 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 1080px;
+}
+
+/* ST-75: the Jump back in hero — last played + the random action. */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding: var(--space-3) var(--space-4);
+}
+
+.heroMain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  flex: 1;
+}
+
+.heroKicker {
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  font-size: var(--font-large);
+  font-weight: 700;
+}
+
+.heroTitle a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.heroTitle a:hover {
+  color: var(--secondary);
+}
+
+.heroActions {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  margin-top: var(--space-1);
+}
+
+.heroSide {
+  flex-shrink: 0;
+}
+
+/* ST-75: the quiet library counts, one line under the hero. */
+.counts {
+  margin: 0;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+}
+
+/* Play glyph on the recents rows (the row itself is the play action). */
+.colPlay {
+  color: var(--secondary);
+  flex-shrink: 0;
+}
+
+.onboarding {
+  text-align: center;
+  padding: var(--space-6) var(--space-3);
+}
+
+.onboardActions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* ST-35 C1 three columns; ST-75: Recently played / Playlists / Collections. Stacks on narrow screens. */
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .columns {
+    /* bare 1fr floors at min-content — a long song title pushes the card off-screen (phone) */
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.colHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.colTitle {
+  margin: 0;
+  font-size: var(--font-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.browse {
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  white-space: nowrap;
+}
+
+.browse:hover {
+  color: var(--secondary);
+}
+
+.colList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.colItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 10px var(--space-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  text-decoration: none;
+  color: var(--text);
+  font-size: var(--font-small);
+}
+
+.colItem:hover {
+  border-color: var(--secondary);
+}
+
+.colItemText {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.colItemTitle {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.colItemMeta {
+  white-space: nowrap;
+}
+
+/* ST-80: the hero's artist rides the title's font size (24px desktop), so on
+   a phone card "— Matt Redman" rendered as a second headline. It reads as a
+   subtitle now. */
+.heroArtist {
+  font-size: var(--font-small);
+  font-weight: 400;
+}
+
+/* ST-80: phones — the hero card is ~330px wide, so the desktop scale
+   (32px padding, 24px title) wrapped the last song over four lines and
+   squeezed Play/Open next to the Random button. Stack: title and actions
+   get the full card width, Random rides its own row on the right. */
+@media (max-width: 639px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .heroTitle {
+    font-size: var(--font-medium);
+  }
+
+  .heroTitle a {
+    /* two lines, ellipsized — "Jump back in" is a glance, not a page */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .heroSide {
+    align-self: flex-end;
+    margin-top: calc(-1 * var(--space-1));
+  }
+}
+
+/* ST-81: desktop — three equal panels left the "Recently played" list
+   truncating at ~18 characters while most of the width sat empty. The list
+   gets 2/3; Playlists stacks above Collections on the right. */
+@media (min-width: 901px) {
+  .columns {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+
+  .columns > section:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .columns > section:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .columns > section:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+/* ST-81: on the wide list the artist truncates with the row (the title
+   already ellipsizes). */
+.colArtist {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

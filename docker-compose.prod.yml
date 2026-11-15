@@ -1,0 +1,18 @@
+# CD deploy overlay — run the BUILT image from GHCR instead of building from source.
+#
+# Deploy on the server (from a checkout of this repo's compose files — no source needed):
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml pull app
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Compose prefers an existing image (it builds only when the image is missing), so
+# pulling first is the whole deploy pin; the base file keeps `build:` so source
+# checkouts and the dev loop are untouched. Pin a release with AHCORD_IMAGE_TAG=v0.1.0
+# in the .env.
+#
+# AHC-4: this overlay carries NO deployment gates and no env defaults — those live in
+# the base compose + .env and keep their self-hosted defaults on every deploy.
+# A public GHCR package needs no login; a private repo's package: `docker login
+# ghcr.io` with a fine-grained PAT that has read:packages.
+services:
+  app:
+    image: ghcr.io/bunnydad18/ahchord:${AHCORD_IMAGE_TAG:-latest}

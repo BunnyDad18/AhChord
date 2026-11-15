@@ -1,0 +1,21 @@
+# VCS
+**/.git
+**/.gitignore
+
+# IDE / OS
+**/.vs
+**/.idea
+**/.DS_Store
+
+# Build artifacts
+**/bin
+**/obj
+**/node_modules
+**/dist
+**/build
+
+# Secrets
+.env
+.env.local
+.env.production
+.env.development

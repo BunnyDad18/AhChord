@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MT-02: server-address trust for the WebView.
+
+     Base (what a release APK ships): the platform's system CAs, plus cleartext — the app
+     connects to user-entered plain-HTTP LAN addresses (http://<lan-ip>:5001), and
+     declarative config cannot scope to private ranges, so cleartext is permitted as with
+     the old usesCleartextTraffic="true". That is the product, not a gap.
+
+     The dev-only trust anchors are in <debug-overrides> (ST-90, public-demo gate 5):
+       - @raw/test_root_ca: the build-host .test root CA (public cert only, the key stays
+         on the box) — trust in https://<name>.test with no per-device install.
+       - user: user-installed CAs, i.e. whatever a proxy tool (mitmproxy/Charles) or a
+         device-admin profile puts in the phone's store.
+     Trusting those in a RELEASE build is the risk: a user-installed CA — installable by
+     any app that asks, or by a phishing profile — can then read the bearer token on the
+     wire, and the bundled CA's key lives on one dev machine. A debug build (android:
+     debuggable=true) keeps both, so development, the .test hostnames and proxy
+     inspection work exactly as before. The APK published by Mobile/publish-apk.sh is a
+     debug build; a release build is the store/official artifact and gets the narrow set.
+
+     Rotating the dev CA = ship a new debug APK (in-app update), as before. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+            <certificates src="@raw/test_root_ca" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

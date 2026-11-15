@@ -1,0 +1,44 @@
+.diagram {
+  display: block;
+}
+
+.whiteOff {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.whiteOn {
+  fill: var(--secondary);
+  stroke: var(--secondary);
+}
+
+.blackOff {
+  fill: #222;
+  stroke: #000;
+  stroke-width: 0.5;
+}
+
+:global([data-theme='light']) .blackOff {
+  fill: #333;
+}
+
+.blackOn {
+  fill: var(--secondary);
+  stroke: var(--bg);
+  stroke-width: 0.5;
+}
+
+.noteLabel {
+  fill: var(--bg);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-family);
+}
+
+.noteLabelSmall {
+  fill: var(--secondary);
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-family);
+}

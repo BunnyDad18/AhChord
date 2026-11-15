@@ -1,0 +1,43 @@
+/* ST-42: column layout toggle — same segmented style as the chord-mode toggle (SongView). */
+.toggle {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.toggle button {
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.toggle button + button {
+  border-left: 1px solid var(--border);
+}
+
+.toggle .active {
+  background: var(--secondary);
+  color: var(--bg);
+}
+
+/* Compact variant for the player's top bar. */
+.sm button {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* ST-70e: the player's column picker is compact on desktop; on phones the buttons
+   need to be touch targets. */
+@media (max-width: 639px) {
+  .sm button {
+    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}

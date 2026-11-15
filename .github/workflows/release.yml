@@ -1,0 +1,184 @@
+name: Release
+
+# CD — not a gate. ci.yml is the published gate (Gate 0); a release tag is cut from main
+# after that gate is green. This workflow publishes from the tagged commit:
+#   image   ghcr.io/bunnydad18/ahchord:<tag> + :latest — the compose deploy route
+#           (docker-compose.prod.yml: pull + up -d on the server)
+#   apk     the debug-signed Android shell with the built web bundle inside (AHC-8).
+#           Needs the repository secret ANDROID_DEBUG_KEYSTORE — base64 of the gitignored
+#           debug keystore (MT-05: phones keep installs by signature, so CI must sign with
+#           the SAME debug key). No secret → the job skips and the release publishes without
+#           the APK.
+#   release GitHub Release: notes + the APK + CHANGELOG.md attached
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/bunnydad18/ahchord
+
+jobs:
+  gate:
+    name: Detect the signing key
+    runs-on: ubuntu-24.04
+    outputs:
+      has-key: ${{ steps.check.outputs.has-key }}
+    steps:
+      # GitHub's expression validator rejects `secrets` in a job-level if: on a job with no
+      # needs (runs #3/#4 died on exactly that; the step-level form fails too — runs #1/#2).
+      # So the secret's presence is probed here (secrets ARE allowed in a step's env:) and
+      # handed to the apk job as a plain output.
+      - id: check
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_DEBUG_KEYSTORE }}
+        run: |
+          if [ -n "$KEYSTORE" ]; then echo "has-key=true" >> "$GITHUB_OUTPUT"; else echo "has-key=false" >> "$GITHUB_OUTPUT"; fi
+
+  image:
+    name: Image — build + push to GHCR
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      # ST-127: one version everywhere — the tag IS the product version (API health/info,
+      # web About, APK versionName, image tag). The commit-count derivation and the git
+      # build context it needed are retired.
+      - name: Release version
+        run: echo "RELEASE_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          build-args:
+            APP_VERSION=${{ env.RELEASE_VERSION }}
+          tags: |
+            ${{ env.IMAGE }}:${{ github.ref_name }}
+            ${{ env.IMAGE }}:latest
+
+  apk:
+    name: Android — debug APK with the built bundle
+    needs: gate
+    runs-on: ubuntu-24.04
+    # Keyed off the gate job's output — the `secrets` context is not usable in a job-level
+    # if: (see gate). No secret → whole job skips gracefully.
+    if: ${{ needs.gate.outputs.has-key == 'true' }}
+    steps:
+      - uses: actions/checkout@v5
+
+      # ST-127: the APK's versionName is the release tag (versionCode is bumped in
+      # build.gradle per release; the APK asset name follows the versionName).
+      - name: Version from the tag
+        run: sed -i "s/versionName \"[^\"]*\"/versionName \"${GITHUB_REF_NAME#v}\"/" Mobile/android/app/build.gradle
+
+      # Mobile/README toolchain: JDK 21 + SDK 35; gradle 8.11.1 arrives via the wrapper.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-35 build-tools;35.0.0 platform-tools'
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: |
+            Frontend/package-lock.json
+            Mobile/package-lock.json
+
+      # AHC-8: the APK ships the BUILT web bundle — the same dist the server serves.
+      - name: Web bundle
+        working-directory: Frontend
+        run: npm ci && npm run build
+
+      - name: Bundle into the shell
+        working-directory: Mobile
+        run: npm ci && npx cap sync android
+
+      - name: Restore the debug signing key
+        run: |
+          mkdir -p "$HOME/.android"
+          printf '%s' "${{ secrets.ANDROID_DEBUG_KEYSTORE }}" | base64 -d > "$HOME/.android/debug.keystore"
+
+      - name: assembleDebug
+        working-directory: Mobile/android
+        run: ./gradlew assembleDebug --console=plain -q
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: Mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+  release:
+    name: Publish the GitHub Release
+    needs: [image, apk]
+    runs-on: ubuntu-24.04
+    # gh release create WRITES — the token is contents:read workflow-wide, and creating a
+    # release answered HTTP 403 (run #5). Scoped to this job, the narrowest surface.
+    permissions:
+      contents: write
+    # The apk job skips gracefully when the signing secret is unset — publish the
+    # image-only release in that case, image must have succeeded.
+    if: ${{ always() && needs.image.result == 'success' && (needs.apk.result == 'success' || needs.apk.result == 'skipped') }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/download-artifact@v4
+        if: needs.apk.result == 'success'
+        with:
+          name: apk
+          path: dist
+
+      - name: Ship notes
+        run: |
+          cat > notes.md <<'EOF'
+          Self-hosted chord chart manager & player — ChordPro text is the single source of truth,
+          real-time setlist sync for band practice over SignalR, Android shell + PWA, one Docker
+          container + PostgreSQL.
+
+          **Run it (image):** `docker compose -f docker-compose.yml -f docker-compose.prod.yml pull app && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
+          — image `ghcr.io/bunnydad18/ahchord`, steps in `docs/DEPLOYMENT.md`.
+          **Use it:** `docs/user/` · **Build it:** `CONTRIBUTING.md` · **Security:** `SECURITY.md`.
+          The full dated record is `CHANGELOG.md`, attached.
+          EOF
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VN=$(grep -oP 'versionName "\K[^"]+' Mobile/android/app/build.gradle)
+          ASSETS=(CHANGELOG.md)
+          if [ -f dist/app-debug.apk ]; then
+            cp dist/app-debug.apk "ahchord-android-${VN}.apk"
+            ASSETS+=("ahchord-android-${VN}.apk")
+          fi
+          # Tag-move workflow (pre-public retags): deleting the tag deletes the release, and
+          # re-pushing it can re-materialize the release object — `gh release create` then
+          # fails "already exists" (v0.4.19 run, 2026-11-15, lost exactly that race).
+          # Delete-if-exists makes this step idempotent: the tag's release is always this
+          # run's build. The tag itself is never touched.
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release delete "$GITHUB_REF_NAME" --yes
+          fi
+          gh release create "$GITHUB_REF_NAME" --title "AhChord $GITHUB_REF_NAME" --notes-file notes.md "${ASSETS[@]}"

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AhChord — shell boot simulator (dev)</title>
+    <script>
+      // Dev tool: simulate the MT-02 Capacitor shell boot inside a browser.
+      // Stubs window.Capacitor (isNativeShell), points the app at a server address,
+      // then loads the real index.html — the ServerGate then runs its boot probe
+      // exactly as it does in the APK. ?server=<url> overrides (default: a dead port,
+      // i.e. "venue Wi-Fi, home server gone").
+      const server =
+        new URLSearchParams(location.search).get('server') || 'http://127.0.0.1:9';
+      window.Capacitor = {
+        isNativePlatform: () => true,
+        getPlatform: () => () => 'android',
+        Plugins: {},
+      };
+      localStorage.setItem('ahchord.server', server);
+    </script>
+  </head>
+  <body>
+    <script>
+      fetch('/index.html')
+        .then((r) => r.text())
+        .then((html) => document.write(html));
+    </script>
+  </body>
+</html>

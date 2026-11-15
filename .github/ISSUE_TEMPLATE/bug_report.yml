@@ -1,0 +1,80 @@
+name: Bug report
+description: Something doesn't work the way it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to dig in. Fill in what you can — a repro
+        beat a description every time. Please [search open
+        issues](https://github.com/BunnyDad18/AhChord/issues) first.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      placeholder: The short version, in plain words.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open setlist player …
+        2. Press Next on the phone …
+        3. The laptop shows …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Settings → About shows the server version (and the Android app version, if relevant).
+      placeholder: e.g. 0.4.18 / server v0.4.x
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: How is your AhChord deployed?
+      options:
+        - Docker Compose (docker compose up)
+        - Behind a reverse proxy (Caddy / nginx / Traefik)
+        - Dev loop (dotnet run + vite)
+        - Not self-hosted / other
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device & browser
+      description: e.g. Pixel 8 / Android app 0.4.18, iPad Safari, Windows + Chrome, Android TV.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: >
+        `docker compose logs app` tail around the failure, browser console
+        errors — trim to the relevant lines and redact anything private.
+      render: text
+  - type: textarea
+    id: chart
+    attributes:
+      label: Chart text, if the bug is about a chart
+      description: >
+        Paste the ChordPro (or the raw text you imported) ONLY if it is
+        public-domain or your own arrangement. Please don't paste copyrighted
+        lyrics into a public issue — describe the chart's shape instead
+        ("verse only, 4 chords, {key:} missing").
+      render: text
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed private hostnames, band names, account paths and copyrighted lyrics from everything above.
+          required: true

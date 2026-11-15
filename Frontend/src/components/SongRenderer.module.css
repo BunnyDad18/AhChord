@@ -1,0 +1,205 @@
+/* Bug report #114: sections need clear separation between them ("a line break
+   between each song section") — 24 → 48px so each section reads as its own
+   block; inside a section .section's --space-1 keeps the lines tight. */
+.song {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ST-42: single-column reading width for multiColumn pages — the song page dropped its
+   820px cap and the player its 760px, so the renderer owns it while no plan is active.
+   (Editor/import previews don't set multiColumn and keep their container's width.)
+   ST-75: 760 → 880px — the "widened chart" pass; a single column on a desktop window
+   reads more like a sheet of chart paper (phone widths are unaffected by the cap).
+   align-items:center keeps the reading column centered when a parent forces full width
+   (the player) — without shrinking el.clientWidth, which pass-1 measurement relies on. */
+.singleCap {
+  max-width: 880px;
+  margin-inline: auto;
+  align-items: center;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sectionLabel {
+  margin: 0;
+  /* ST-39 F2: scales with --lyric-scale (the song page's A−/A+ buttons). */
+  font-size: calc(var(--font-small) * var(--lyric-scale, 1));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text); /* bug report #97: section labels were blue like the chords — plain bold text separates them from the chart */
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.line {
+  margin: 0;
+  /* ST-39 F2: scales with --lyric-scale (the song page's A−/A+ buttons). */
+  font-size: calc(var(--font-medium) * var(--lyric-scale, 1));
+  line-height: 1.7;
+}
+
+/* ST-84 polish: CCLI / copyright footer lines (detected in SongRenderer) sit
+   quiet — small, dim, tighter — so the licence block stops competing with the
+   lyrics it trails (James: "make the CCLI section stand out less"). */
+.lineMeta {
+  font-size: calc(12px * var(--lyric-scale, 1));
+  line-height: 1.5;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+/* ST-39 F1 (fixed): wide screens — long songs split into 2–3 balanced columns. CSS
+   multi-column can't balance an auto-height container, so the column plan is computed in
+   JS (SongRenderer) and rendered as a flex row; lines are atomic units and a section label
+   always stays with its first line. */
+/* .song sets flex-direction: column — override it so the columns sit side by side. */
+.multiColRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--space-8);
+}
+
+/* ST-83: player fit-to-height pages (PC/laptop/tablet) — every column is at most the
+   page height with no vertical scroll; overflow columns flow to the right in a
+   horizontal scroller. The plan sets each page's flex-basis inline (1/`visible` of
+   the scroller width), so a swipe / shift-wheel / scrollbar moves whole pages, and
+   snap keeps them aligned. The gutter lives in the column's own padding. */
+.flowRow {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none; /* ST-84 polish: no scrollbar (James) — arrows, wheel, keys and touch move the row */
+}
+
+.flowRow::-webkit-scrollbar {
+  display: none;
+}
+
+.col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* matches .lines */
+}
+
+/* ST-83: a flow page — fixed page-width (the plan's inline flex-basis), never
+   growing or shrinking with its neighbours. Declared after .col on purpose:
+   .col's `flex: 1 1 0` shorthand must not win over the page sizing. The
+   page gutter is its own padding (the row gap is 0 so pages tile exactly). */
+.flowCol {
+  flex-grow: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  max-height: 100%;
+  /* Bug report (2026-11-12): no inner scrollbar — the pager fits the height budget
+     (the live guard shrinks it until every page fits); content never scrolls inside a
+     page, overflow flows to the RIGHT (that is the model). */
+  overflow-y: visible;
+  scroll-snap-align: start;
+  padding-right: var(--space-8);
+}
+
+/* Flex items in a height-constrained column shrink by default — pages then measure
+   their blocks compressed, and the pack over-stuffs (overflow returns as >100% fill
+   at 1024×768). Blocks keep natural height; a too-full page scrolls, and the plan's
+   live guard reacts. */
+.flowCol > * {
+  flex-shrink: 0;
+}
+
+/* Bug report #114: multi-column plans render labels and lines as flat siblings in
+   .col, so the between-section gap comes from margin above each section label
+   (not the first in a column — the label stays glued to its first line). */
+.col .sectionLabel:not(:first-child) {
+  margin-top: var(--space-4);
+}
+
+/* Chord token: inline in the lyric flow, shifted up so it sits above the
+   word it precedes (ST-18 MVP rendering). */
+.chord {
+  position: relative;
+  top: -0.55em;
+  display: inline-block;
+  margin: 0 0.12em;
+  font-size: 0.72em;
+  font-weight: 700;
+  /* ST-51 #13: dedicated chord token — higher contrast than --secondary (small bold text). */
+  color: var(--chord);
+  white-space: nowrap;
+}
+
+.ann {
+  position: relative;
+  top: -0.45em;
+  font-size: 0.62em;
+  font-style: italic;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* ST-54: bar notation glyphs (barline / repeat signs) — inline in the lyric flow,
+   sized to one line of text so they read as staff-like marks between chords. */
+.bar {
+  height: 1em;
+  width: auto;
+  vertical-align: -0.12em;
+  margin: 0 0.25em;
+  color: var(--text-secondary);
+}
+
+.repeat {
+  height: 1em;
+  width: auto;
+  vertical-align: -0.12em;
+  margin: 0 0.2em;
+  color: var(--text-secondary);
+}
+
+/* ST-39 F3: chord-above mode — each line is a two-row grid (chord row + lyric row),
+   one column per segment so chords sit exactly over their syllables. */
+.aboveGrid {
+  display: inline-grid;
+  align-items: end;
+}
+
+.aboveChord {
+  white-space: pre;
+  text-align: left;
+  min-height: 1em; /* keeps the row height when a column has no chord */
+}
+
+/* Same look as .chord without the inline -0.55em shift (the grid does the placing). */
+.chordPlain {
+  display: inline-block;
+  margin: 0 0.12em;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--chord); /* ST-51 #13 */
+  white-space: nowrap;
+}
+
+.aboveText {
+  white-space: pre;
+}
+
+.empty {
+  color: var(--text-secondary);
+  font-style: italic;
+}

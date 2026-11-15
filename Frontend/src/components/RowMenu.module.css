@@ -1,0 +1,85 @@
+/* ST-75: shared "⋯" row menu (RowMenu.tsx). */
+
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 40;
+  min-width: 190px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 4px;
+}
+
+.alignLeft {
+  right: auto;
+  left: 0;
+}
+
+/* Bug report #88: labeled text trigger (e.g. "Manage library"). */
+.labelTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 9px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.item:hover {
+  background: var(--border);
+}
+
+.item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ico {
+  display: inline-flex;
+  color: var(--text-secondary);
+}
+
+/* ST-27: destructive stays readable (4.56:1 on surface) and never relies on
+   the icon alone — every item carries its label. */
+.danger {
+  color: var(--error);
+}
+
+.danger .ico {
+  color: inherit;
+}
+
+.danger:hover {
+  background: var(--error);
+  color: var(--on-error);
+}
+
+/* ST-70e: phone touch targets. */
+@media (max-width: 639px) {
+  .item {
+    min-height: 44px;
+  }
+}

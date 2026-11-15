@@ -1,0 +1,478 @@
+/* ST-35 D4: wider page to fit the list + right-hand filter panel. */
+.page {
+  max-width: 1100px;
+}
+
+/* ST-75: the filter panel became a toolbar — one search, chip selects, sort. */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* bug report #111: toolbar first row — search input + the "Manage library" menu. */
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.searchRow .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  padding-bottom: 2px;
+}
+
+/* ST-106: free-tag chip row under the selects (AND-narrowing filter). */
+.tagRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: var(--space-1);
+}
+
+.tagRow button {
+  cursor: pointer;
+}
+
+.tagActive {
+  background: var(--secondary);
+  color: var(--bg);
+  border-color: var(--secondary);
+}
+
+.chipSelect {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+}
+
+.chipSelect select {
+  min-height: 28px;
+  padding: 2px 4px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+  cursor: pointer;
+  /* Bug report #84: standardized chip widths — the Artist list's long names
+     used to stretch the row. Long values clip with an ellipsis. */
+  width: 11ch;
+  max-width: 15ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sortChip {
+  margin-left: auto;
+}
+
+/* ST-75: amber review chip — the user's backlog, matching the activity box. */
+.reviewChip {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+/* Bug report #89: the add-to-playlist "+" reads as disabled (no playlists). */
+.plAddOff {
+  opacity: 0.35;
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.content {
+  display: block;
+}
+
+.listCol {
+  min-width: 0;
+}
+
+/* bug report #111: the page head (RowMenu wrapper) is gone — "Manage library"
+   moved into the toolbar's .searchRow. */
+
+/* Bug report (2026-11-12, /songs): the search box stood taller (44px) than the
+   "Manage library" button beside it (32px) — on desktop they share the button's
+   height; the 44px touch-target height stays for phones. */
+.input {
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+}
+
+@media (max-width: 639px) {
+  .input {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+}
+
+.list {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ST-35 D1: the whole row is clickable (opens the player). */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 10px var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+  /* ST-80: rows no longer wrap — on phones the +/⋯ cluster dropped below the
+     title and every row a different height (the nowrap ellipsis + nowrap
+     badges fixed the overflow that triggered it). Rows carrying the ST-35 F3
+     inline proposal panel keep wrapping via :has() below. */
+  flex-wrap: nowrap;
+}
+
+/* ST-35 F3: inline metadata proposal review, full-width under the row. */
+.row:has(.proposalPanel) {
+  flex-wrap: wrap;
+}
+
+/* ST-35 F3: inline metadata proposal review, full-width under the row. */
+.proposalPanel {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.proposalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.proposalTitle {
+  margin: 0;
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.proposalRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: var(--font-small);
+}
+
+.proposalField {
+  min-width: 64px;
+  font-weight: 700;
+}
+
+/* ST-69: library-wide proposal review — categories (field + value) with per-category accept. */
+.reviewDialog {
+  width: min(620px, 100%);
+  max-height: min(80vh, 720px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.reviewHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.reviewHead h2 {
+  margin: 0;
+}
+
+.groupList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow-y: auto;
+}
+
+/* ST-71: field sections — the modal body scrolls as one column of field blocks,
+   each block a field header (+ whole-field accept) above its category rows. */
+.reviewBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.fieldSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fieldHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: var(--font-small);
+  font-weight: 600;
+}
+
+.groupItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.groupHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: var(--font-small);
+}
+
+.groupValue {
+  font-weight: 700;
+}
+
+.groupSongs {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+}
+
+.groupSongs ul {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row:hover {
+  border-color: var(--secondary);
+}
+
+/* ST-37 C3: title over artist, one above the other. */
+.songInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-decoration: none;
+  color: var(--text);
+  min-width: 0;
+  /* ST-80: take the remaining width so the action column sits at the same
+     right edge on every row, short titles included. */
+  flex: 1;
+}
+
+/* ST-37 C3: the title line carries the badges. */
+.songTitleLine {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  /* Cross-axis child of the column .songInfo: nowrap text made this row
+     size to MAX-content (583px for a long title), overflowing the phone.
+     Pin it so the strong's ellipsis governs. */
+  max-width: 100%;
+}
+
+.songInfo strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* flex item with nowrap text: min-width:auto floors at the FULL text width
+     (long title = 583px) and blew out the page width on phones; 0 lets the
+     ellipsis do its job. */
+  min-width: 0;
+}
+
+.keyBadge {
+  font-weight: 700;
+}
+
+/* ST-35 F1: version count badge (×2, ×3…) on songs with multiple imported versions. */
+.countBadge {
+  font-weight: 700;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  /* ST-70: phones — Review + Edit + playlist + delete (44px each) must not
+     force the row wider than the screen; wrap to a second line. */
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* ST-37 C1: compact add-to-playlist — icon button + popover menu (replaces the wide select). */
+.plMenu {
+  position: relative;
+}
+
+.plMenuList {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 20;
+  min-width: 180px;
+  max-height: 260px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  padding: 4px;
+}
+
+.plMenuItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.plMenuItem:hover {
+  background: var(--border);
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-2);
+}
+
+/* ST-39 C1: library total shown when the list is unfiltered and fully loaded. */
+.listTotal {
+  text-align: center;
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  padding: var(--space-2);
+}
+
+.dialog {
+  width: min(400px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dialog h2 {
+  margin: 0;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+/* ST-68: live metadata-scan progress strip (under the page header). */
+.scanStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: var(--font-small);
+}
+
+.scanCurrent {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ST-80: phones — the compact row rhythm. With the outer wrap gone (see
+   .row) and badges nowrap, rows are one fixed block; trim the desktop
+   gutters so the title gets the width the action column doesn't. */
+@media (max-width: 639px) {
+  .row {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+}

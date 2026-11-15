@@ -1,0 +1,4 @@
+/* Bug report #103: the queue page — the queue component carries its own card chrome. */
+.page {
+  max-width: 760px;
+}

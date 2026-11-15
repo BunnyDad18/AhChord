@@ -1,0 +1,50 @@
+name: Feature request
+description: An idea that would make AhChord better
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us the *problem* first — the best features here started as a
+        rehearsal-room pain. Please [search open
+        issues](https://github.com/BunnyDad18/AhChord/issues) first; a short
+        "me too" on an existing issue beats a new one.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Player & performance
+        - Library, songs & editor
+        - Import (paste / upload / Convert / Search)
+        - Setlists, playlists & sessions
+        - Mobile app & offline
+        - Settings, accounts & auth
+        - Deployment & configuration
+        - Other / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      placeholder: What you're trying to do, and where the app gets in the way.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Your idea
+      description: A sketch is fine — the exact interaction is negotiable, the problem is the fixed point.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Workarounds you've tried
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope awareness (the product has hard edges)
+      options:
+        - label: My idea doesn't require storing anything other than the ChordPro text as the source of truth (chords/sections stay derivable from it).
+        - label: My idea doesn't write to the stored chart when transposing/capo (display-only).
+        - label: My idea keeps working on a private LAN with no cloud services.

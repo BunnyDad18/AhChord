@@ -1,0 +1,575 @@
+.player {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  /* ST-84 polish: the auto-hiding overlay dock needs NO reservation — the chart
+     takes the full height and the bar is allowed to overlap it on appear.
+     --dock-h is MEASURED (Player.tsx ResizeObserver — the phone bar wraps by
+     width) so the hints line and the phone popover anchor off the real bar. */
+}
+
+.reconnect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 8px var(--space-2);
+  text-align: center;
+  background: var(--warning);
+  color: var(--on-warning);
+  font-weight: 700;
+  font-size: var(--font-small);
+}
+
+/* ST-36 E1: inline-flex so the flat users icon aligns with the text. */
+.participants {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* ST-84: fixed-height top bar — exit left, key/capo chip in a reserved slot,
+   title centered, status right. Nothing conditional in the flow, so the bar
+   (and the chart) never moves when a capo/transpose is set. The chip is
+   absolute in the bar (the bar is the anchor) past Back's fixed-width label,
+   so its variable width (Key of G ↔ Capo 3 · Key of B) shifts nothing.
+   Phone: two rows — Back + status + chip on row 1, title centered full width
+   on row 2 (chip width can never squeeze the title). */
+.topBar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: var(--space-1);
+  row-gap: 0;
+  padding: calc(6px + env(safe-area-inset-top, 0px)) var(--space-2) 6px;
+  border-bottom: 1px solid var(--border);
+  min-height: 56px;
+  position: relative;
+}
+
+/* ST-84 polish: phones get a quiet X exit top-right (the shell has no browser
+   chrome); on desktop the player exits via browser back / Esc and this hides. */
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  color: var(--text);
+  background: var(--border);
+}
+
+/* ST-84: "Capo 3 · Key of A" in a permanently reserved slot — absolutely
+   placed at the left (past nothing now: Back is gone), so its variable width
+   (Key of G ↔ Capo 3 · Key of B) shifts nothing. */
+.keyChip {
+  grid-row: 1;
+  position: absolute;
+  top: calc(28px + env(safe-area-inset-top, 0px)); /* phone row-1 center (6px
+     padding + safe area + half of the 44px targets) — the status bar (camera/
+     battery) is inset, never under the chip */
+  left: var(--space-2);
+  transform: translateY(-50%);
+  max-width: min(30vw, 150px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--chord);
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.songHead {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  /* Bug report #92: slimmer header — the title steps down from --font-large. */
+  font-size: var(--font-medium);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.artist {
+  font-size: var(--font-small); /* bug report #92: artist follows the smaller title */
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ST-84: the empty artist still occupies its line (the bar height is fixed). */
+.artistGhost {
+  visibility: hidden;
+}
+
+.topActions {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: nowrap;
+}
+
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3) var(--space-2);
+  display: flex;
+  justify-content: center;
+}
+
+.scrollArea > * {
+  width: 100%;
+  max-width: 760px;
+}
+
+/* ST-42: the chart manages its own width — .singleCap (760px) when single-column, full
+   window width when a multi-column plan is active. */
+.scrollArea > [class*="song"] {
+  max-width: none;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ST-84: the dock is an overlay — a full-width bar at the bottom edge on phones,
+   a floating pill on desktop. It never sits in the layout; ST-84 polish lifted
+   the reservation (the auto-hide makes overlap fine), so the chart takes the
+   full height and the bar glides over it. --dock-tx: the pill's centering
+   transform, so the idle fade can add to it. */
+.dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--space-1) var(--space-2) calc(var(--space-2) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  transform: var(--dock-tx, translateX(0));
+  transition:
+    opacity 250ms ease,
+    transform 250ms ease,
+    visibility 250ms;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.dockTools {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+/* A−/A+ as a compact segmented pair (matches the song view's modeToggle). */
+.fontGroup {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.fontGroup button {
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.fontGroup button + button {
+  border-left: 1px solid var(--border);
+}
+
+/* Bug report #115: every dock control shares one visual height. The dock mixes
+   transport buttons, the Key & Capo trigger, A−/A+, the column buttons and the
+   Edit link. 32px on the desktop pill, 44px on the phone bar (touch targets);
+   the ui.btn/[class*="btn"] pattern matches the scoped module class names (see
+   .scrollArea above) so KeyCapoControl/ColumnsControl size from here, without
+   editing their files. */
+.transport > [class*="btn"],
+.dockTools > [class*="btn"],
+.dockTools [class*="trigger"] {
+  min-height: 32px;
+  padding: 4px 12px;
+  font-size: 13px;
+}
+
+.dockTools .fontGroup,
+.dockTools [class*="toggle"] {
+  height: 32px;
+}
+
+.dockTools .fontGroup button,
+.dockTools [class*="toggle"] button {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 10px;
+}
+
+/* Bug report (2026-11-12): the full-screen toggle — a square icon tool in the
+   dock's row (32px desktop / 44px phone), same border-hover as its neighbours. */
+.dockTools .fsBtn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+/* Bug report (2026-11-12): the "Chords" display toggle — same segmented-group
+   scale as A−/A+; the border lights while chords are shown (aria-pressed). */
+.dockTools .chordsGroup {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 10px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dockTools .chordsGroup[aria-pressed='true'] {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+@media (max-width: 639px) {
+  .dockTools .fsBtn {
+    min-width: 44px;
+    height: 44px;
+  }
+}
+
+/* ST-84 (James: the dock's hover highlights were inconsistent): ONE convention
+   for every dock control — the border lights up (--secondary), no background
+   swaps. The repo standard is ui.btn's border hover; the segmented groups
+   (A−/A+, columns) light their outer border; scoped here so no other page's
+   buttons change. The filled primary (Random) keeps its brightness lift. */
+.transport > [class*="btn"]:hover,
+.transport > [class*="btn"]:focus-visible,
+.dockTools > [class*="btn"]:hover,
+.dockTools > [class*="btn"]:focus-visible,
+.dockTools [class*="trigger"]:hover,
+.dockTools [class*="toggle"]:hover,
+.dockTools [class*="toggle"]:focus-within,
+.fontGroup:hover,
+.fontGroup:focus-within {
+  border-color: var(--secondary);
+}
+
+/* Hovered buttons keep their resting background (kills the BugReport fill);
+   the filled primary (Random) keeps its fill + brightness lift. */
+.transport > [class*="btn"]:not([class*="primary"]):hover,
+.dockTools > [class*="btn"]:not([class*="primary"]):hover {
+  background: transparent;
+}
+
+.fontGroup button:hover {
+  color: var(--text);
+}
+
+/* ST-75 / ST-84 polish: the keyboard-hints line is ALWAYS visible and NEVER
+   moves (James) — on desktop it is pinned to the bottom-LEFT corner, clear of
+   the centred pill. It never fades with the dock. Phones have no keyboard, so
+   the line is hidden there (max-width media). */
+.hints {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--dock-h, 120px) + env(safe-area-inset-bottom, 0px) + 4px);
+  z-index: 19;
+  margin: 0;
+  padding: 4px var(--space-2);
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+/* ST-84: the wake handle — a quiet edge pill, visible only while the chrome is
+   faded; any pointer / touch / key / scroll wakes the chrome back. */
+.handle {
+  position: absolute;
+  left: 50%;
+  bottom: calc(5px + env(safe-area-inset-bottom, 0px)); /* clear of the phone
+     navigation buttons (back/home/recents) — 0 on desktop */
+  transform: translateX(-50%);
+  width: 64px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--secondary);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 21;
+  transition: opacity 250ms ease;
+}
+
+/* ST-84 polish: column arrows — thin ghost ‹ › on the edges, one COLUMN per
+   tap. Each is mounted only while a move in its direction exists, and they
+   never fade with the bar. To keep them off the chart's face (James: the left
+   one sits over text) they ride at low opacity with no box, and only firm up
+   (colour + pill) on hover — visible affordance, no occlusion. */
+.edge {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 18;
+  width: 28px;
+  height: 64px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-secondary);
+  opacity: 0.4;
+  cursor: pointer;
+  transition:
+    opacity 150ms ease,
+    color 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.edgeL {
+  left: 2px;
+}
+
+.edgeR {
+  right: 2px;
+}
+
+.edge:hover {
+  opacity: 1;
+  color: var(--text);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border-color: var(--border);
+}
+
+/* ST-84: idle fade — only the dock leaves (visibility:hidden also drops it from
+   the tab order); the layout never moves. The hints line and the column arrows
+   stay put (ST-84 polish): arrows appear only while their direction can move. */
+.chromeHidden .dock {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: var(--dock-tx, translateX(0)) translateY(10px);
+}
+
+.chromeHidden .handle {
+  opacity: 0.45;
+}
+
+@media (max-width: 639px) {
+  .transport > [class*="btn"],
+  .dockTools > [class*="btn"],
+  .dockTools [class*="trigger"] {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+
+  .dockTools .fontGroup,
+  .dockTools [class*="toggle"] {
+    height: 44px;
+  }
+
+  /* ST-84 polish (James): phones — no keyboard-hints line (there is no
+     keyboard), and no columns control (the vertical model ignores column
+     pins). The Random and Edit buttons drop their labels (.btnLabel) and the
+     Key & Capo trigger goes compact, so the bar sits on ONE row:
+     Random · Key & Capo · A± · bug · Edit — gaps and A± padding trimmed to
+     make the row fit a 390px phone. */
+  .hints {
+    display: none;
+  }
+
+  .btnLabel {
+    display: none;
+  }
+
+  .dockTools [class*="toggle"] {
+    display: none;
+  }
+
+  .dockTools .fontGroup button {
+    padding: 0 8px;
+  }
+
+  /* (ST-84 polish: the wake handle's clearance of the phone navigation
+     buttons moved to the base .handle rule — env(safe-area-inset-bottom).) */
+}
+
+@media (min-width: 640px) {
+  /* One row on desktop (ST-84 polish: no Back button — browser back / Esc
+     exits): chip floats top-left, title centered across the full bar,
+     status right. */
+  .topBar {
+    grid-template-rows: 1fr;
+  }
+
+  .songHead {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    /* ST-84 polish: the title spans the whole bar and centers on the true
+       viewport centre (James) — the chip (left) and status (right) float
+       over the ends; long titles ellipsize. Fixed placement → capo changes
+       move nothing. */
+    padding: 0 calc(min(24vw, 260px) + 16px);
+  }
+
+  .keyChip {
+    top: 50%;
+    max-width: min(24vw, 260px);
+  }
+
+  .closeBtn {
+    display: none;
+  }
+
+  /* ST-84 polish: the hints line is pinned to the bottom-LEFT corner (James:
+     "so they don't move when the bar appears") — the pill floats centre-stage
+     and never touches it. */
+  .hints {
+    right: auto;
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    bottom: 12px;
+    padding: 4px 12px;
+    text-align: left;
+  }
+
+  /* ST-84: the desktop dock floats as a centered pill over the chart (ST-84
+     polish: no reservation — it glides over the full-height chart; 18px off
+     the bottom keeps it clear of the always-visible hints line). */
+  .dock {
+    --dock-tx: translateX(-50%);
+    left: 50%;
+    right: auto;
+    bottom: 18px;
+    width: max-content;
+    max-width: min(1100px, calc(100vw - 32px));
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.progressWrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 120px;
+  max-width: 320px;
+}
+
+.progress {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--secondary);
+  transition: width var(--transition);
+}
+
+.position {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  min-width: 48px;
+  text-align: right;
+}
+
+/* ST-80: phones — the dock flattens to one wrapping row. Single-song mode
+   left Random alone on its own row, so the dock cost three rows (~150px) of
+   chart height. .transport/.dockTools collapse via display:contents and the
+   dock itself becomes a wrapping flex row, so the buttons reflow into two
+   rows of 44px targets. The 44px sizing rules above match DOM children
+   (display:contents changes boxes, not the DOM tree), and the Key & Capo
+   popover anchors to its trigger's bounding box, which is unaffected.
+   ST-84: the flattened bar is the overlay bar at the bottom edge. */
+@media (max-width: 639px) {
+  .dock {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* ST-84 polish: trimmed from 8 to keep the one-row bar on a 390px phone */
+  }
+
+  .transport,
+  .dockTools {
+    display: contents;
+  }
+
+  /* Phone page arrows: the vertical model never has a flow row, and the
+     bar keeps thumb reach — arrows belong to the desktop flow model only. */
+  .edge {
+    display: none;
+  }
+}

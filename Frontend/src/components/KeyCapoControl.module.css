@@ -1,0 +1,96 @@
+/* ST-75: Key & Capo popover (KeyCapoControl.tsx). */
+
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.trigger.open {
+  border-color: var(--secondary);
+}
+
+.pop {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 60;
+  min-width: 320px;
+  max-width: min(360px, 92vw);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ST-75: the player dock opens the popover upward. */
+.popUp {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: var(--font-small);
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: var(--font-small);
+}
+
+/* The sounding key is the money line — chord-token colour, bold. */
+.soundKey {
+  color: var(--chord);
+  font-size: var(--font-medium);
+}
+
+/* ST-84 polish: the phone one-row bar swaps the dynamic label ("Capo 3 · Key
+   of B") for the static "Key & Capo" — the chip in the top bar carries the
+   live reading. The full label stays for the accessible name (aria-label).
+   Names avoid "trigger"/"btn" so the dock's [class*=] sizing rules do not
+   style the spans. */
+.keyLabelShort {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .keyLabel {
+    display: none;
+  }
+
+  .keyLabelShort {
+    display: inline;
+  }
+
+  .pop {
+    min-width: min(320px, 92vw);
+  }
+
+  /* ST-84: phones — the dock trigger rides the bottom bar, so a right-anchored
+     popover clips off-screen. Pin the popover to the viewport: centered, above
+     the MEASURED bar (--dock-h from the player) + safe area. */
+  .popUp {
+    position: fixed;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    bottom: calc(var(--dock-h, 120px) + env(safe-area-inset-bottom, 0px) + 12px);
+    width: min(360px, 94vw);
+  }
+}

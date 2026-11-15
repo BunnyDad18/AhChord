@@ -1,0 +1,92 @@
+services:
+  # Single container: ASP.NET Core API + (later) React static build
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # ST-32: expose .git to the build so it can derive the version's patch from the commit count.
+      additional_contexts:
+        git: .git
+    container_name: ahchord-app
+    # host.docker.internal → the Docker host, so local services (e.g. LM Studio on
+    # :1234) are reachable from inside the container as http://host.docker.internal:1234
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # ST-35 H2: in-app bug reports land here (readable from the host).
+      - ahchord_data:/data
+    ports:
+      # :5001 published on all interfaces — the MT-02 Android shell connects over the
+      # LAN as plain HTTP (http://<lan-ip>:5001); the WebView can't trust the build-host
+      # .test root CA (no network security config, user CAs are ignored on targetSdk 35),
+      # and the APK allows cleartext. Traefik keeps publishing https://ahchord.local →
+      # this port for browsers. The dotnet dev loop keeps :5000 loopback-only.
+      - "0.0.0.0:5001:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRY_MINUTES=${JWT_EXPIRY_MINUTES}
+      # ST-35 A3: optional — when set in .env, a fixed "agent" test user is seeded at startup.
+      - TEST_USER_PASSWORD=${TEST_USER_PASSWORD}
+      - LLM_BASE_URL=${LLM_BASE_URL}
+      - LLM_MODEL=${LLM_MODEL}
+      - LLM_API_KEY=${LLM_API_KEY}
+      # SSRF policy for the member-facing LLM endpoints; false on an internet-facing instance
+      # (see .env.example). Default true keeps the local-model product working.
+      - LLM_ALLOW_PRIVATE_NETWORK=${LLM_ALLOW_PRIVATE_NETWORK:-true}
+      # ST-90 public-demo gates — all default to the self-hosted band server; the .env.example
+      # block explains each. A public demo sets REGISTRATION_OPEN=false + SEED_ADMIN_*,
+      # LIBRARY_WRITES_ADMIN_ONLY=true, JWT_STAMP_CHECK=true, LLM_ALLOW_PRIVATE_NETWORK=false,
+      # TRUSTED_PROXY_IPS (CIDR accepted). The `:-` defaults keep `docker compose up` quiet on a
+      # LAN deployment whose .env predates these knobs.
+      - REGISTRATION_OPEN=${REGISTRATION_OPEN:-true}
+      - SEED_ADMIN_USERNAME=${SEED_ADMIN_USERNAME:-}
+      - SEED_ADMIN_EMAIL=${SEED_ADMIN_EMAIL:-}
+      - SEED_ADMIN_PASSWORD=${SEED_ADMIN_PASSWORD:-}
+      - LIBRARY_WRITES_ADMIN_ONLY=${LIBRARY_WRITES_ADMIN_ONLY:-false}
+      - JWT_STAMP_CHECK=${JWT_STAMP_CHECK:-false}
+      - RATE_LIMIT_AUTH_PERMIT=${RATE_LIMIT_AUTH_PERMIT:-30}
+      - RATE_LIMIT_AUTH_WINDOW_SECONDS=${RATE_LIMIT_AUTH_WINDOW_SECONDS:-60}
+      - RATE_LIMIT_IMPORT_PERMIT=${RATE_LIMIT_IMPORT_PERMIT:-10}
+      - RATE_LIMIT_IMPORT_WINDOW_SECONDS=${RATE_LIMIT_IMPORT_WINDOW_SECONDS:-60}
+      - TRUSTED_PROXY_IPS=${TRUSTED_PROXY_IPS:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # ST-74: allow the graceful stop to finish — Hangfire cancels in-flight LLM jobs after
+    # 10 s (Program), they return cleanly, and the server drains; the 10 s default SIGKILLed
+    # mid-scan, leaving jobs for the watchdog to re-queue (the scan-restart loop).
+    stop_grace_period: 40s
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  # PostgreSQL Database Service (host :5432 for the local dev loop)
+  postgres:
+    image: postgres:16-alpine
+    container_name: ahchord-postgres
+    ports:
+      # loopback for the local dev loop (the app container reaches it via the
+      # compose network, not this publish)
+      - "127.0.0.1:5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  ahchord_data:

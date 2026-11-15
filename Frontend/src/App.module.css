@@ -1,0 +1,28 @@
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+}
+
+.loaderBar {
+  width: 120px;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+  animation: slide 900ms ease-in-out infinite alternate;
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(-12px);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateX(12px);
+    opacity: 1;
+  }
+}

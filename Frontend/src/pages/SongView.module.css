@@ -1,0 +1,233 @@
+/* ST-42: no page-level width cap — the chart uses the full window width and flows into
+   columns (SongRenderer owns the single-column reading width via .singleCap). */
+.page {
+  max-width: none;
+}
+
+.songBody {
+  min-width: 0;
+}
+
+/* ST-39 F2/F3: reading controls — font size + chord display mode. */
+.readingControls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ST-75: the folded toolbar — reading groups left, Key & Capo right. */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: calc(-1 * var(--space-2)) 0 var(--space-3);
+}
+
+/* ST-75: chord legend strip under the toolbar. */
+.legend {
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-small);
+}
+
+.legendChords {
+  color: var(--chord);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.modeToggle {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.modeToggle button {
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.modeToggle button + button {
+  border-left: 1px solid var(--border);
+}
+
+.modeToggle .modeActive {
+  background: var(--secondary);
+  color: var(--bg);
+}
+
+.center {
+  text-align: center;
+  padding: var(--space-6);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-xxlarge);
+  line-height: 1.1;
+}
+
+.artist {
+  margin: 6px 0 0;
+  font-size: var(--font-large);
+  color: var(--text-secondary);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: 10px;
+  font-size: var(--font-small);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* ST-35 F1: other imported versions of this song. */
+.versions {
+  margin-bottom: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.versionsTitle {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.versionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.versionLink {
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  text-decoration: none;
+}
+
+.versionLink:hover {
+  color: var(--secondary);
+}
+
+/* ST-46 bug-56: attached source files (pdf/png/jpg) with inline preview.
+   ST-75: collapsed to a one-line summary bar. */
+.sourceFiles {
+  margin-bottom: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.sourceSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: var(--font-small);
+}
+
+.sourceFiles[open] .sourceSummary {
+  margin-bottom: var(--space-2);
+}
+
+.sourceBarActions {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.sourceList {
+  list-style: none;
+  margin: var(--space-1) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sourceRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-small);
+  flex-wrap: wrap;
+}
+
+.sourceName {
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.sourceActions {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.previewPane {
+  margin-top: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.previewImg {
+  display: block;
+  max-width: 100%;
+}
+
+.previewFrame {
+  display: block;
+  width: 100%;
+  height: 480px;
+  border: none;
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+  }
+  .title {
+    font-size: var(--font-xlarge);
+  }
+  .actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

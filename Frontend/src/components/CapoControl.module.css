@@ -1,0 +1,69 @@
+/* ST-51 #8: capo stepper (− value +) over frets 0–6 — mirrors TransposeControl's look. */
+.group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.label {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  margin-right: 4px;
+}
+
+.stepBtn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text);
+  font-size: var(--font-small);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+.stepBtn:hover:not(:disabled) {
+  border-color: var(--secondary);
+}
+
+.stepBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.value {
+  min-width: 34px;
+  text-align: center;
+  font-size: var(--font-small);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.sm .stepBtn {
+  min-width: 28px;
+  height: 28px;
+  font-size: 13px;
+}
+
+.sm .value {
+  min-width: 30px;
+  font-size: 13px;
+}
+
+/* Mobile: >= 44px tap targets (ST-17/ST-19). */
+@media (max-width: 639px) {
+  .stepBtn,
+  .sm .stepBtn {
+    min-width: 44px;
+    height: 44px;
+  }
+
+  /* ST-43: the compact variant drops its decorative label on narrow screens. */
+  .sm .label {
+    display: none;
+  }
+}

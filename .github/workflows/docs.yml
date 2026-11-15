@@ -1,0 +1,66 @@
+name: Docs
+
+# GitHub Pages — the user documentation site (ST-114): the user guide, deployment guide,
+# screenshots, prompts and SECURITY.md, built with VitePress from the repo itself and served
+# at https://bunnydad18.github.io/AhChord/.
+# This workflow PUBLISHES — it is not a gate (Gate 0 lives in ci.yml; release.yml is CD).
+# Development docs (docs/tasks/, CODE_RULES, the engineering journal…) are excluded by the
+# site config and stripped from the published tree (scripts/publish-github.sh).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'SECURITY.md'
+      - 'index.md'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build the docs site
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: docs/site
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: docs/site/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      # vitepress build — the dead-link check runs here: every relative link in the
+      # published docs must resolve inside the site.
+      - name: Build
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/site/.vitepress/dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

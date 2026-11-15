@@ -1,0 +1,81 @@
+name: CI
+
+# The public-facing gate: the API builds with ZERO warnings and every test passes, and the
+# web bundle type-checks, builds and passes its suite. Both halves are the numbers the README
+# badges point at, so the workflow keeps exactly the commands the repo documents:
+#   dotnet build + dotnet test (WebApi.Tests)   and   npm run build + npm test (Frontend)
+# The Android shell (Mobile/) is not built here — it needs the Android SDK + signing keystore,
+# and Mobile/publish-apk.sh is the release path for it.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  api:
+    name: API — build (0 warnings) + tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # DeriveAppVersion (WebApi.csproj) reads `git rev-list --count v<Prefix>..HEAD`, so
+          # the tags are wanted; without them the version falls back to the commit count.
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore AhChord.sln
+
+      # The 0-warnings gate. Restore runs separately so a NuGet audit notice cannot fail the
+      # compile step, and the compile step is unforgiving: one warning is a red build.
+      - name: Build (Release, warnings are errors)
+        run: dotnet build AhChord.sln --configuration Release --no-restore -warnaserror
+
+      - name: Test
+        run: >-
+          dotnet test WebApi.Tests/WebApi.Tests.csproj
+          --configuration Release --no-build
+          --logger "console;verbosity=normal"
+
+  web:
+    name: Frontend — tsc + vite build + vitest
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: Frontend
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      # tsc --noEmit then vite build — the type check is the gate.
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test

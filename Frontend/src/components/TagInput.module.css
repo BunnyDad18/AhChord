@@ -1,0 +1,131 @@
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.hint {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.input {
+  flex: 1;
+  min-width: 120px;
+  padding: 4px var(--space-1);
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: var(--font-small);
+}
+
+.removeBtn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.removeBtn:hover {
+  color: var(--error);
+}
+
+.reorder {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.reorderBtn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.reorderBtn:hover:enabled {
+  color: var(--secondary);
+}
+
+.reorderBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.suggestion {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-1);
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestion:hover,
+.suggestionActive {
+  background: var(--border);
+}

@@ -1,0 +1,25 @@
+/* MT-04: offline state banner — warning tone, same shape as ui.errorBanner. */
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 8px var(--space-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--warning);
+  background: color-mix(in srgb, var(--warning) 12%, transparent);
+  color: var(--text);
+  font-size: var(--font-small);
+  margin: var(--space-1) var(--space-2) 0;
+}
+
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border: 1px solid var(--warning);
+  color: var(--warning);
+}

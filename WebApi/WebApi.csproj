@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <!-- ST-127: one release version for the whole product — API (health/info/web-About),
+             the GHCR image tag and the APK all carry the release tag (e.g. 0.5.0). CI passes
+             /p:ReleaseVersion=<tag> (Dockerfile APP_VERSION, release.yml); local builds use
+             this default. The old commit-count derivation (ST-32/37) is retired: on the
+             squashed public tree it produced numbers no release ever names (0.1.1 for v0.4.19). -->
+        <Version Condition="'$(ReleaseVersion)' != ''">$(ReleaseVersion)</Version>
+        <Version Condition="'$(Version)' == ''">0.5.0</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.25" />
+        <PackageReference Include="Hangfire.PostgreSql" Version="1.21.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.11" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.11" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.17.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- ST-31: let the test project exercise internal helpers (AppVersion / NormalizeVersion). -->
+        <InternalsVisibleTo Include="WebApi.Tests" />
+    </ItemGroup>
+
+</Project>

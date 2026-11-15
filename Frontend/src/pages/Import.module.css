@@ -1,0 +1,348 @@
+/* ST-36 D1: wider page — the paste + preview panes need room on wide screens. */
+.page {
+  max-width: 1440px;
+}
+
+/* ST-33: main import area leads; the conversion queue is a narrow sidebar on
+   wide screens and stacks below (import abilities first) on small ones. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.mainCol {
+  min-width: 0;
+}
+
+/* Bug report #103: the conversion queue lives on its own page (/queue) now —
+   this strip is all that remains on the import form. */
+.queueBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  margin-bottom: var(--space-2);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-3);
+}
+
+.tab {
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.tabActive {
+  color: var(--text);
+  border-bottom-color: var(--secondary);
+}
+
+.pasteGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  align-items: start;
+}
+
+/* ST-39 A1: raw/preview toggle — one pane at a time, every width (no side-by-side). */
+.viewToggle {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-3);
+}
+
+.viewToggleBtn {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.viewToggleActive {
+  color: var(--text);
+  border-bottom-color: var(--secondary);
+}
+
+/* One pane at a time: raw by default, preview when toggled. */
+.pasteGrid .previewCol {
+  display: none;
+}
+
+.pasteGrid.showPreview .pasteCol {
+  display: none;
+}
+
+.pasteCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* ST-37 B1: label + upload button share one line above the editor. */
+.editorHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.editor {
+  min-height: 320px;
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.editorSmall {
+  min-height: 140px;
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: var(--font-small);
+  resize: vertical;
+  margin-bottom: var(--space-1);
+}
+
+.metaPanel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.panelTitle {
+  margin: 0 0 4px;
+  font-size: var(--font-medium);
+}
+
+/* ST-39 A1: metadata fields flow into 2–3 columns as width allows. */
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--space-1);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.select {
+  min-height: 44px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+}
+
+.previewCol {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: var(--space-2);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* ST-38 Q2: drag & drop zone for .cho/.txt files (its own tab). */
+.uploadZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 260px;
+  padding: var(--space-4) var(--space-3);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.uploadZone p {
+  margin: 0;
+}
+
+.uploadZoneDragging {
+  border-color: var(--secondary);
+  background: color-mix(in srgb, var(--secondary) 8%, transparent);
+}
+
+/* ST-46 bug-57: multi-file confirm panel above the drop zone. */
+.uploadCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.batchPanel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.batchList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.batchRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--font-small);
+  flex-wrap: wrap;
+}
+
+.batchRowMuted {
+  opacity: 0.65;
+}
+
+.batchName {
+  font-weight: 600;
+  word-break: break-all;
+}
+
+/* ST-50 follow-up: editable title/artist in the confirm panel — underline-only inputs so the
+   row still reads as a list, not a form. */
+.batchMeta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.batchInput {
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--border);
+  padding: 0 2px 1px;
+  min-width: 8ch;
+}
+
+.batchInput:focus {
+  outline: none;
+  border-bottom-color: var(--secondary);
+}
+
+.batchFlag {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.batchActions {
+  display: flex;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.convertCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 720px;
+}
+
+.convertCol h3 {
+  margin: var(--space-2) 0 6px;
+}
+
+.steps {
+  padding-left: 20px;
+  margin: 0 0 var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--text);
+  font-size: var(--font-small);
+}
+
+.promptDetails {
+  margin: var(--space-2) 0;
+}
+
+.promptBox {
+  max-height: 240px;
+  overflow: auto;
+  padding: 12px;
+  border-radius: var(--radius);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+.hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--space-2) 0;
+}
+
+.successPanel {
+  text-align: center;
+  padding: var(--space-6);
+}
+
+.successActions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}

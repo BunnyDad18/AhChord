@@ -1,0 +1,967 @@
+/* ST-75: the shell is a row — desktop sidebar (left) + content column. The
+   sidebar hides <1024px, where the top bar's inline nav (and on phones the
+   bottom tabs) carry the same five destinations. */
+.shell {
+  min-height: 100vh;
+  min-height: 100dvh; /* ST-70e: dvh follows the mobile browser URL bar */
+  display: flex;
+  flex-direction: row;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top-bar pieces the sidebar takes over at ≥1024px (brand, inline nav
+   duplicates, activity, avatar). `contents` keeps them layout-transparent. */
+.wideHidden {
+  display: contents;
+}
+
+/* ST-75: desktop sidebar — hidden below 1024px (layout in the 1024 block). */
+.sidebar {
+  display: none;
+}
+
+.sideLink,
+.sideLinkActive {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius);
+  border-left: 3px solid transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.sideLink:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.sideLinkActive {
+  color: var(--text);
+  background: var(--border);
+  border-left-color: var(--secondary);
+  padding-left: 9px;
+}
+
+/* Activity, theme toggle, account — pinned to the foot. 2026-11-09 (James:
+   "the spacing for the 3 buttons at the bottom and the separator line … all
+   seems a bit off"): the empty activity span used to sit between the line and
+   the buttons and contribute its two flex gaps (16px); :empty retires it, so
+   the line-to-buttons padding matches the foot's bottom padding. */
+.sideFoot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.sideActivity:empty {
+  display: none;
+}
+
+/* James: the current app version, a small quiet line at the bottom-left of
+   the sidebar (the foot's last row). The collapsed rail has no room — it
+   retires there. */
+.sideVersion {
+  padding: 0 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.sideCollapsed .sideVersion {
+  display: none;
+}
+
+/* Bug report #86/#87: sidebar header. Bug report #107 moved the collapse
+   chevron out of the head into the foot row; the 2026-11-09 pass moved it
+   again — the head is brand only, the chevron is the edge tab (.edgeToggle). */
+.sideHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+  padding: 0 4px;
+}
+
+/* Collapse/expand grip — a thin tab flush on the sidebar's right border,
+   centred vertically (the boundary the sidebar moves along). The ::before
+   widens the hit area past the 14px-wide tab. */
+.edgeToggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: var(--radius) 0 0 var(--radius);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  z-index: 5;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.edgeToggle::before {
+  content: '';
+  position: absolute;
+  inset: -8px -10px -8px -12px;
+}
+
+.edgeToggle:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* Bug report #82: the foot is activity + a row of square icon buttons
+   (theme · report a bug · account) — no full-width buttons. 2026-11-09:
+   space-between spreads the three to the links' full width (they used to
+   clump left, leaving a 53px dead zone right of the avatar). */
+.sideRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.sideIcon {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Bug report #109: in the foot row the 44px filled circle reads bigger than
+   the icon glyphs — the circle shrinks to 32px (centered via ::before behind
+   the initials, and the image is clipped round at 32px), while the button
+   keeps its 44px touch target. */
+.sideRow .avatarBtn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 0;
+  background: none;
+  font-size: 14px;
+  position: relative;
+  isolation: isolate; /* keeps the z-index:-1 circle behind the text only */
+}
+
+.sideRow .avatarBtn::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 1px solid var(--border);
+  z-index: -1;
+}
+
+.sideRow .avatarImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+/* Bug report #87: collapsed sidebar — icons only; the label flies out of the
+   icon as a box on hover/focus. */
+.sideCollapsed .sideLabel {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  z-index: 60;
+  padding: 7px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--font-small);
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+.sideCollapsed .sideLink:hover .sideLabel,
+.sideCollapsed .sideLinkActive:hover .sideLabel,
+.sideCollapsed .sideLink:focus-visible .sideLabel,
+.sideCollapsed .sideLinkActive:focus-visible .sideLabel {
+  display: block;
+}
+
+.sideCollapsed .sideLink,
+.sideCollapsed .sideLinkActive {
+  position: relative;
+  justify-content: center;
+  padding: 9px;
+}
+
+.sideCollapsed .name {
+  display: none;
+}
+
+.sideCollapsed .sideHead {
+  justify-content: center;
+  padding: 0;
+}
+
+.sideCollapsed .sideActivity {
+  display: none;
+}
+
+.sideCollapsed .sideFoot {
+  align-items: center;
+}
+
+.sideCollapsed .sideRow {
+  flex-direction: column;
+}
+
+.sideCollapsed .queueBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  padding: 0 5px;
+  font-size: 11px;
+}
+
+/* ST-86 follow-up (James: "I expect the join button and the start session
+   button to be in the left hand sidebar") + ST-87 (the general follow service):
+   the sidebar SESSION panel, between the nav links and the foot. A green dot +
+   host + Join per live session and the always-visible Start session button;
+   host/follower strips while in a session. Collapsed rail: one users icon
+   carrying the count. */
+.sideSessions {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.sessPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sessRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.sessDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  flex: 0 0 auto;
+}
+
+.sessName {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-small);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.sessHint {
+  padding: 0 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Panel buttons ride the sidebar's width; the Join in a row stays compact. */
+.sessPanel > button {
+  width: 100%;
+}
+
+.sessStartBtn {
+  margin-top: 2px;
+}
+
+.sessCollapsedBtn {
+  position: relative;
+}
+
+.sessBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--secondary);
+  color: var(--bg);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.sideCollapsed .sideSessions {
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
+  display: flex;
+  justify-content: center;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 700;
+  font-size: var(--font-medium);
+  white-space: nowrap;
+  /* ST-36 A1: brand is a link home — keep it looking like plain text. */
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo {
+  font-size: var(--font-large);
+  color: var(--secondary);
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.navLink,
+.navLinkActive {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.navLink:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.navLinkActive {
+  color: var(--text);
+  background: var(--border);
+}
+
+.search {
+  flex: 1;
+  min-width: 160px;
+  max-width: 320px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.iconBtn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  padding: var(--space-1);
+  font-size: var(--font-medium);
+  line-height: 1;
+  transition: background var(--transition);
+}
+
+.iconBtn:hover {
+  background: var(--border);
+}
+
+/* ST-70g variant B: the activity box — [icon] {automated left} · {eye} {to
+   review}, bar on the box's bottom edge, left accent + steady glow in the state
+   colour (teal while automated work runs, amber when only review remains). */
+.activityPill {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px 9px 5px 8px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--secondary);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  font-size: var(--font-small);
+  box-shadow:
+    -2px 0 10px color-mix(in srgb, var(--secondary) 32%, transparent),
+    0 0 8px color-mix(in srgb, var(--secondary) 20%, transparent);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.activityPillAttention {
+  border-left-color: var(--warning);
+  box-shadow:
+    -2px 0 10px color-mix(in srgb, var(--warning) 32%, transparent),
+    0 0 8px color-mix(in srgb, var(--warning) 20%, transparent);
+}
+
+.activityHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+/* The machine's numbers (teal) vs the user's backlog (amber). */
+.activityIcoAuto {
+  display: inline-flex;
+  color: var(--secondary);
+}
+
+.activityNumAuto {
+  color: var(--secondary);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.activitySep {
+  color: var(--text-secondary);
+  margin: 0 2px;
+}
+
+.activityIcoUser {
+  display: inline-flex;
+  color: var(--warning);
+}
+
+.activityNumUser {
+  color: var(--warning);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Progress bar, inset from the box edges (left accent stays its own edge,
+   same as the top). 3px all around keeps the accent unbroken. */
+.activityBar {
+  display: block;
+  height: 3px;
+  margin: 0 3px 3px 3px;
+  border-radius: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.activityBarFill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--secondary);
+  transition: width 1s linear;
+}
+
+/* Indeterminate: a segment sliding across (conversions have no aggregate %). */
+.activityBarIndet {
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--secondary);
+  animation: activitySlide 1.4s ease-in-out infinite;
+}
+
+/* Only the review backlog remains: a solid amber bar. */
+.activityBarAmber {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--warning);
+}
+
+@keyframes activitySlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+/* ST-36 E1: the converting icon spins (and pulses) — flat RefreshIcon. */
+.spinIcon {
+  display: inline-flex;
+  animation:
+    queuePulse 1.6s ease-in-out infinite,
+    queueSpin 1.2s linear infinite;
+}
+
+.queueBadge {
+  min-width: 20px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--secondary);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+@keyframes queuePulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes queueSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ST-70a: avatar account menu — replaces the inline name/Settings/Sign-out text
+   (cramped, cluttered top bar; device-testing feedback). ST-70c adds the custom
+   avatar image. */
+.avatarWrap {
+  position: relative;
+}
+
+.avatarBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter var(--transition);
+}
+
+.avatarBtn:hover {
+  filter: brightness(1.18);
+}
+
+/* ST-70c: the profile image fills the round button (initials stay as fallback). */
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatarMenu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 210px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-1) 0;
+  z-index: 200;
+}
+
+/* Bug report #105/#113: the sidebar foot sits at the viewport bottom, so the
+   menu must open upward there (the top-bar instance, 640–1024px, keeps
+   opening downward). */
+.sidebar .avatarMenu {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+
+.avatarHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-1) var(--space-2);
+  margin-bottom: var(--space-1);
+  border-bottom: 1px solid var(--border);
+}
+
+.avatarName {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.avatarSub {
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+}
+
+.avatarItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 8px var(--space-2);
+  background: none;
+  border: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--font-small);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.avatarItem:hover {
+  background: var(--border);
+}
+
+.avatarSignout {
+  color: var(--error);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-3);
+}
+
+/* ST-39 F1 / ST-42: the song detail + import pages use the full window width from ~1100px —
+   matches SongRenderer's 3-column budget (content ≥1100px → up to 3 columns). */
+/* Desktop: the search wrapper is transparent to layout; phone hides it (CSS below). */
+.searchWrap {
+  display: contents;
+}
+
+/* --- ST-70d: phone bottom navigation + More sheet (hidden on desktop) --------- */
+.bottomNav {
+  display: none;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 56px;
+  padding: 6px 2px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 11px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tabActive {
+  color: var(--secondary);
+}
+
+/* ST-75: the Import tab's "ready to review" badge, next to the label. */
+.tabLabelWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tabBadge {
+  min-width: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--secondary);
+  color: var(--bg);
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ST-70h: the More tab shows the user's avatar (initial / photo), no text label
+   (James: "I don't think the more text needs to be there with the avatar icon").
+   32px (James: "try bumping up the avatar icon to 32") — same size as the
+   top-bar avatarBtn; the label-less tab keeps the full 56px touch height. */
+.tabAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabActive .tabAvatar {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--secondary) 35%, transparent);
+}
+
+/* Avatar tab (no label): it does NOT take an equal flex slot - centering the
+   32px circle in a 75px slot left big empty margins (James: "reduce the margin
+   between the avatar and the rest of the menu items", then the left-aligned
+   version left a gap at the right edge). The tab hugs the avatar: the five
+   labeled tabs share the rest, the circle sits snug at the bar's right. */
+.avatarTab {
+  flex: 0 0 auto;
+  padding: 6px 14px 6px 8px;
+}
+
+/* Bare circle reads a hair low next to icon+label columns - 1px up (James). */
+.tabAvatar {
+  transform: translateY(-1px);
+}
+
+.sheetScrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 290;
+}
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  z-index: 295;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: var(--shadow);
+  padding: var(--space-1) 0 var(--space-2);
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.sheet .avatarHeader {
+  margin: 0 var(--space-2) var(--space-1);
+}
+
+.sheet .avatarItem {
+  min-height: 44px;
+  padding: 10px var(--space-3);
+}
+
+@media (max-width: 639px) {
+  /* Slim one-row top bar: logo · actions. */
+  .topbar {
+    flex-wrap: nowrap;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    padding-top: calc(var(--space-2) + env(safe-area-inset-top, 0px));
+  }
+
+  .topbar .name {
+    display: none;
+  }
+
+  .topbar .nav,
+  .searchWrap {
+    display: none;
+  }
+
+  .bottomNav {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 300;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Content clears the fixed tab bar. */
+  .main {
+    padding-bottom: calc(var(--space-4) + 72px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (min-width: 1100px) {
+  .mainWide {
+    max-width: none;
+  }
+}
+
+/* ST-75: ≥1024px — the sidebar is the primary nav; the top bar keeps brand-
+   free search + bug report (+ the inline nav and foot duplicates hide). */
+@media (min-width: 1024px) {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    width: 218px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100dvh;
+    padding: var(--space-3) var(--space-2);
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    /* 2026-11-09 (James): no scrollbar strips — overflow-x clip (the font-size
+       setting widens labels; `auto` here was a `visible`+`auto` coercion strip),
+       scrollbar-width none (short viewports: the wheel scrolls, no bar). */
+    overflow-x: clip;
+    overflow-y: auto;
+    scrollbar-width: none;
+    transition: width var(--transition);
+  }
+
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sidebar .sideHead {
+    margin-bottom: var(--space-3);
+  }
+
+  /* Bug report #87: collapsed = icons only. */
+  .sideCollapsed {
+    width: 64px;
+    padding: var(--space-3) 8px;
+    overflow: visible; /* the hover flyout must not clip */
+  }
+
+  /* Bug report #106: with search, nav, brand and actions all hidden, the top
+     bar is an empty sticky strip here — hide it. The header's ResizeObserver
+     (Shell.tsx) then measures 0 and publishes --topbar-height: 0px. */
+  .topbar {
+    display: none;
+  }
+
+  /* Bug report #80: the top-bar search box is gone where the sidebar lives —
+     the Songs page's own search is one tap away. */
+  .searchWrap {
+    display: none;
+  }
+
+  .topbar .nav {
+    display: none;
+  }
+
+  .topbar .brand {
+    display: none;
+  }
+
+  .wideHidden {
+    display: none;
+  }
+}
+
+/* ST-36 C1: the bug report dialog moved to BugReport.module.css (shared with the player). */
+
+/* Mobile: every tappable target >= 44px (ST-17/ST-26). */
+@media (max-width: 639px) {
+  .navLink,
+  .navLinkActive {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .searchInput {
+    min-height: 44px;
+  }
+
+  .iconBtn {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .activityPill {
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .avatarBtn {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+}

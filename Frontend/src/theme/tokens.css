@@ -1,0 +1,134 @@
+/* Design tokens from docs/DESIGN_AND_USER_EXPERIENCE.md §2.
+   Dark is the default; light is opt-in via [data-theme='light'] on <html>. */
+
+/* Android WebView "font boosting" (text autosizing) inflates page text on
+   phones (observed Pixel 8a / Capacitor): body content renders huge, spills
+   past the viewport and pushes the fixed bottom nav off-screen, while short
+   top-bar text stays normal. Opt out — we own the type scale. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+:root {
+  /* Spacing scale (8px base) */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-12: 96px;
+
+  /* Type scale (desktop px) */
+  --font-small: 14px;
+  --font-medium: 18px;
+  --font-large: 24px;
+  --font-xlarge: 32px;
+  --font-xxlarge: 48px;
+
+  --font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  --radius: 8px;
+  --transition: 300ms ease-in-out;
+
+  /* Base body font size, scaled by the user's S/M/L preference */
+  --base-font-size: 16px;
+}
+
+/* ---------- Dark (default) ---------- */
+/* Contrast (ST-27): text on bg ≥ 4.5, semantic text on bg ≥ 4.5,
+   UI components/borders ≥ 3 — see docs/DESIGN_AND_USER_EXPERIENCE.md §4. */
+:root,
+:root[data-theme='dark'] {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --primary: #0f4c75;
+  --secondary: #4a90c4; /* was #3282b8 (4.08:1 links) → 4.94:1 on bg */
+  --chord: #ffd166; /* bug report #97: chords were blue on dark blue — gold reads on navy (11.2:1, ST-27 rules) and separates chords from the blue UI chrome (ST-51 #13) */
+  --text: #eaeaea;
+  --text-secondary: #a0a0a0;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #ef5350; /* was #f44336 (4.31:1 danger text on surface) → 4.56:1 */
+  --on-warning: #1a1a1a; /* text on --warning banners: 8.06:1 */
+  --on-error: #1a1a1a; /* text on --error hover: 4.99:1 */
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+
+/* ---------- Light ---------- */
+:root[data-theme='light'] {
+  --bg: #ffffff;
+  --surface: #f5f5f5;
+  --primary: #1976d2;
+  --secondary: #00838f; /* 4.52:1 links on bg */
+  --chord: #966c00; /* bug report #97: gold chords in the light theme too (4.79:1 on bg) */
+  --text: #212121;
+  --text-secondary: #666666; /* was #757575 (4.23:1 on surface) → 5.26:1 */
+  --success: #2e7d32; /* was #4caf50 (2.78:1) → 5.13:1 on bg */
+  --warning: #b45309; /* was #ff9800 (2.16:1) → 5.02:1 on bg */
+  --error: #d32f2f; /* was #f44336 (3.68:1 as text) → 4.98:1 on bg */
+  --on-warning: #ffffff; /* text on --warning banners: 5.02:1 */
+  --on-error: #ffffff; /* text on --error hover: 4.98:1 */
+  --border: rgba(0, 0, 0, 0.12);
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  color-scheme: light;
+}
+
+/* ---------- Font-size preference ---------- */
+:root[data-font-size='S'] {
+  --base-font-size: 14px;
+}
+:root[data-font-size='M'] {
+  --base-font-size: 16px;
+}
+:root[data-font-size='L'] {
+  --base-font-size: 18px;
+}
+
+/* ---------- Base element styles ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--base-font-size);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--secondary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

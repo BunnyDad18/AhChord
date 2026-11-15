@@ -1,0 +1,14 @@
+{
+  "appId": "app.ahchord.android",
+  "appName": "AhChord",
+  "webDir": "../Frontend/dist",
+  "server": {
+    "androidScheme": "http"
+  },
+  "android": {
+    "webContentsDebuggingEnabled": true,
+    "webview": {
+      "textZoom": 100
+    }
+  }
+}

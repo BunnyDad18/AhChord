@@ -1,0 +1,189 @@
+.page {
+  max-width: 860px;
+}
+
+.h1 {
+  margin: 0 0 8px;
+  font-size: var(--font-xlarge);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.nameEdit {
+  display: flex;
+  gap: var(--space-1);
+  margin-bottom: 8px;
+}
+
+.input {
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+}
+
+.desc {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--font-small);
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: var(--space-1);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+/* ST-106: setlist tags block (replaces the collection select). */
+.tagsField {
+  min-width: 220px;
+}
+
+/* Bug report #100: two-pane transfer — library on the left, playlist on the
+   right; rows move with a single button. Stacks below 900px. */
+.transfer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  align-items: start;
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 899px) {
+  .transfer {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pane {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.paneTitle {
+  margin: 0;
+  font-size: var(--font-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.paneList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.paneRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  min-width: 0;
+}
+
+/* Bug report #99/#101: the meta row fields (gig date, setlist toggle). */
+.metaField {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--font-small);
+  margin-top: var(--space-1);
+  max-width: 220px;
+}
+
+/* Bug report (2026-11-12): .setlistCheck retired — the setlist toggle is gone. */
+
+.pos {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.songInfo {
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.songActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ST-75: drag handle + the row being dragged. */
+.grip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  cursor: grab;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.grip:hover {
+  color: var(--text);
+  background: var(--border);
+}
+
+.grip:active {
+  cursor: grabbing;
+}
+
+.dragging {
+  border-color: var(--secondary);
+  box-shadow: var(--shadow);
+  opacity: 0.75;
+}
+
+/* ST-70e: phone rows — 44px icon actions can wrap to their own line. */
+@media (max-width: 639px) {
+  .actions {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,102 @@
+.chordBtn {
+  position: relative;
+  top: -0.55em;
+  display: inline-block;
+  margin: 0 0.12em;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.72em;
+  font-weight: 700;
+  /* ST-51 #13: dedicated chord token — higher contrast than --secondary (small bold text). */
+  color: var(--chord);
+  cursor: help;
+  white-space: nowrap;
+  border-radius: 3px;
+}
+
+.chordBtn:hover {
+  text-decoration: underline;
+}
+
+/* ST-75: pinned (tap-opened) diagrams read as deliberate — dotted underline
+   on the token, accent edge on the tooltip. */
+.chordBtn.pinned {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+/* ST-75: flat variant (the song-view chord legend) — sits on the text baseline
+   of its row instead of lifted over lyrics, at the row's own font size. */
+.chordBtn.flat {
+  position: static;
+  font-size: inherit;
+}
+
+.tooltip.pinned {
+  border-color: var(--secondary);
+}
+
+.tooltip {
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transition: opacity 150ms ease;
+  max-width: min(320px, calc(100vw - 16px));
+}
+
+.visible {
+  opacity: 1;
+}
+
+.toggleRow {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.toggleBtn {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.toggleBtn[aria-pressed='true'] {
+  background: var(--secondary);
+  border-color: var(--secondary);
+  color: var(--bg);
+  font-weight: 700;
+}
+
+.toggleBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.body {
+  display: flex;
+  justify-content: center;
+}
+
+.notes {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.notes strong {
+  color: var(--text);
+}

@@ -1,0 +1,47 @@
+.bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--success);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* Live indicator — the green "playing now" dot. */
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--success);
+  flex: 0 0 auto;
+}
+
+.name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* ST-86 follow-up: at ≥1024px the sidebar's SessionPanel carries discovery +
+   Join (James moved the buttons there) — the page bar is phone/tablet-only. */
+@media (min-width: 1024px) {
+  .bar {
+    display: none;
+  }
+}

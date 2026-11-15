@@ -1,0 +1,458 @@
+.page {
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* ST-36 B3: settings tabs — one section at a time. */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-2);
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.tabActive {
+  color: var(--text);
+  border-bottom-color: var(--secondary);
+}
+
+.sectionTitle {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-large);
+}
+
+/* ST-70c: profile image (Settings → Account): round preview + upload/remove. */
+.avatarRow {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  margin: var(--space-2) 0;
+}
+
+.avatarPreview {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.avatarPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatarActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.avatarActions p {
+  margin: 0;
+}
+
+.nameRow {
+  display: flex;
+  gap: var(--space-1);
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.nameRow > div:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+
+.stats {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-small);
+}
+
+.prefRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.prefRow:last-child {
+  border-bottom: none;
+}
+
+/* ST-66: logo picker — icon + label radio cards; the mark inherits --secondary. */
+.prefRowStack {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--space-2);
+  width: 100%;
+  margin-top: var(--space-1);
+}
+
+.logoOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  cursor: pointer;
+}
+
+.logoOption:hover {
+  border-color: var(--secondary);
+}
+
+.logoOptionActive {
+  border-color: var(--secondary);
+  box-shadow: inset 0 0 0 1px var(--secondary);
+  color: var(--text-primary);
+}
+
+.logoOptionActive svg {
+  color: var(--secondary);
+}
+
+.prefRow > span {
+  font-weight: 600;
+}
+
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.seg button {
+  min-width: 56px;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.seg button + button {
+  border-left: 1px solid var(--border);
+}
+
+.segActive {
+  background: var(--secondary) !important;
+  color: var(--bg) !important;
+}
+
+.pwForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
+}
+
+.pwForm > div {
+  width: 100%;
+}
+
+/* LLM conversion (ST-30) */
+
+.llmEffective {
+  margin: var(--space-1) 0;
+  font-size: var(--font-small);
+}
+
+.sourceBadge {
+  vertical-align: middle;
+}
+
+.llmForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.llmFormTitle {
+  margin: 0;
+  font-size: var(--font-medium, 15px);
+}
+
+.keyRow {
+  display: flex;
+  gap: var(--space-1);
+  align-items: flex-end;
+  width: 100%;
+}
+
+.keyRow > div:first-child {
+  flex: 1;
+}
+
+.linkBtn {
+  white-space: nowrap;
+}
+
+.llmActions {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.modelChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+}
+
+.modelChip {
+  min-height: 0;
+  padding: 4px 10px;
+  font-weight: 500;
+}
+
+.chipActive {
+  background: var(--secondary) !important;
+  color: var(--bg) !important;
+  border-color: var(--secondary);
+}
+
+.testResult {
+  margin: 0;
+  font-size: var(--font-small);
+}
+
+.testOk {
+  color: var(--success, #4caf7d);
+}
+
+.testFail {
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--danger, #c0564f) 12%, transparent);
+  color: var(--text-primary, inherit);
+}
+
+/* About / version + changelog (ST-31) */
+
+.versionLine {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-small);
+}
+
+.androidDownload {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.changelog {
+  max-height: 480px;
+  overflow-y: auto;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--bg) 40%, transparent);
+  font-size: var(--font-small);
+}
+
+/* react-markdown emits unstyled elements; scope them to the .changelog wrapper. */
+.changelog h1 {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-medium);
+}
+
+.changelog h2 {
+  margin: var(--space-2) 0 var(--space-1);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--font-small);
+}
+
+.changelog h3 {
+  margin: var(--space-1) 0 4px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.changelog p {
+  margin: 0 0 var(--space-1);
+}
+
+.changelog ul {
+  margin: 0 0 var(--space-1);
+  padding-left: 20px;
+}
+
+.changelog li {
+  margin-bottom: 4px;
+}
+
+.changelog a {
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+.changelog a:hover {
+  text-decoration: underline;
+}
+
+.changelog blockquote {
+  margin: 0 0 var(--space-1);
+  padding-left: var(--space-1);
+  border-left: 3px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.changelog hr {
+  margin: var(--space-2) 0;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+.changelog code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--secondary) 16%, transparent);
+  font-size: 0.9em;
+}
+
+/* Mobile: >= 44px tap targets (ST-26). */
+@media (max-width: 639px) {
+  .seg button {
+    min-height: 44px;
+  }
+}
+
+/* ST-37 D1: submitted bug reports tab. */
+.bugList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.bugItem {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.bugResolved {
+  opacity: 0.65;
+}
+
+.bugHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.bugText {
+  margin: 0;
+  white-space: pre-line;
+  font-size: var(--font-small);
+}
+
+/* ST-39 D2: smaller date font in the report header line. */
+.bugDate {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ST-39 D2: status pill — new / resolved / waiting for a question. */
+.bugPill {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.bugPill_new {
+  color: var(--text-secondary);
+}
+
+.bugPill_resolved {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.bugPill_waiting {
+  color: var(--warning, #b45309);
+  border-color: var(--warning, #b45309);
+}
+
+/* ST-40 D2: the report's short title — the collapsed view. */
+.bugTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--font-small);
+}
+
+/* ST-40 D1: Reopen button, pushed to the top right of the header line (no status dropdown). */
+.bugReopen {
+  margin-left: auto;
+}
+
+/* ST-40 D2: titled reports are click-to-expand. */
+.bugCollapsible {
+  cursor: pointer;
+}

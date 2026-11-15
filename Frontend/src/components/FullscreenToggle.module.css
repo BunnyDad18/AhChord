@@ -1,0 +1,25 @@
+/* Bug report (2026-11-12): full-screen toggle — the header/sidebar icon-button
+   scale, like the bug-report button beside it. Contexts (sidebar foot, top bar,
+   player dock) pass their own class to match their neighbours' sizing. */
+.btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.btn:hover {
+  border-color: var(--secondary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 1px;
+}
