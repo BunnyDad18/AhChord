@@ -14,7 +14,10 @@ All notable changes to **AhChord** are documented in this file. The format is ba
 ## [Unreleased]
 
 ### Fixed
+- 2026-11-16 — **Pages: the user guide is reachable** (ST-130) — the nav, the sidebar's "Start here" and the front-page hero all linked `/AhChord/docs/user/`, which 404s: the guide's landing page is `docs/user/README.md`, and VitePress builds a directory index only from an `index.md` (the page sat at `/docs/user/README`). `config.mts` adds `rewrites: docs/user/README.md → docs/user/index.md`, so the README stays the README on GitHub and serves the natural `/AhChord/docs/user/` route on the site; nav, sidebar and hero keep their links. The dead-link check cannot catch a directory link with no index (nothing to resolve), so entry points need this eyes-on pass.
 - 2026-11-16 — **Pages: the docs site builds from scratch** (ST-129 wave 2) — on a cold tree the root-level pages (`index.md`, `SECURITY.md`) import bare `vue` / `vue/server-renderer`, which cannot resolve from the repo root, and the Pages build died (`Rollup failed to resolve import "vue/server-renderer" from SECURITY.md`). The site had never built clean anywhere — the dev box's state masked it; reproduced on the published tree tarball. `config.mts` now aliases both specifiers to the site's own vue, verified from zero.
+- 2026-11-16 — **The GitHub repo is public** — Pages enabled and the user-docs site is live at [bunnydad18.github.io/AhChord](https://bunnydad18.github.io/AhChord/); anonymous GHCR pulls and the Releases API work, unblocking MT-07's in-app update flow (AHC-5 sweep clean on the tip before the flip).
+- 2026-11-16 — **Branch flow on Gitea: `develop` → `main`** — finished work merges into **`develop`** (now the repo default); a release batch is a PR `develop` → `main` (CI + `/review-pr` gate it; `main` moves only by merged PRs). GitHub is unchanged — the publish script remains the only path (ST-113). The pre-launch `Initial-Setup` line is retired.
 
 _(rest below)_
 

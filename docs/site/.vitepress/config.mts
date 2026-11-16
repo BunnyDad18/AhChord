@@ -52,6 +52,12 @@ export default defineConfig({
     plugins: [copySiteRootImages],
   },
   cleanUrls: true,
+  // The user guide's landing page is docs/user/README.md (the README renders on GitHub,
+  // docs/README.md is a folder index there), so build it as the directory index: the
+  // natural URL /docs/user/ works, not just /docs/user/README (ST-130). Nav/sidebar
+  // links use the route /docs/user/ — the rewritten page's route, and the '/docs/user/'
+  // sidebar key matches it.
+  rewrites: { 'docs/user/README.md': 'docs/user/index.md' },
   lastUpdated: true,
   title: 'AhChord',
   description:
@@ -87,6 +93,8 @@ export default defineConfig({
   },
   themeConfig: {
     nav: [
+      // The guide's landing page is docs/user/README.md (the README renders on GitHub);
+      // `rewrites` builds it as the directory index, so the route is /docs/user/.
       { text: 'User guide', link: '/docs/user/' },
       { text: 'Deployment', link: '/docs/DEPLOYMENT' },
       { text: 'Screenshots', link: '/docs/screenshots/README' },
