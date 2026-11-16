@@ -18,10 +18,14 @@ All notable changes to **AhChord** are documented in this file. The format is ba
 - 2026-11-15 — **API suite no longer flakes on CI** — Hangfire's static log provider could outlive a disposed test host and poison a later fixture's job enqueues with `ObjectDisposedException: LoggerFactory` (500s from `POST /api/songs` in `SongTagEndpointsTests`). The fixture now releases the binding on dispose (the AHC-9 static-side-effect class, test seam).
 
 ### Changed
+- 2026-11-15 — **Donation links made privacy-safe** — the PayPal badge is gone from the README: its public profile page shows the developer's real name, the one public association between the GitHub persona and real-world identity that the AHC-5 sweep cannot catch (the leak is on the page the link points *to*). The Ko-fi link stays (pseudonymous), and `.github/FUNDING.yml` now feeds it to GitHub's **Sponsor** button.
 - 2026-11-15 — **One release version everywhere** (ST-127) — the release tag is the product version: `/api/health`, `/api/info` (Settings → About), the GHCR image tag and the APK all report `0.5.0`; the commit-count version derivation is retired.
 - 2026-11-15 — **The GitHub repo has a real history and a PR-gated publish** (ST-127) — one "Initial launch" commit, then one squash-merged PR per publish batch (CI gates the PR); tags are cut from main after merge. The 12×-moved `v0.4.19` tag, the disconnected `v0.1.0`, and 13 draft releases are gone; `v0.5.0` is the first release of the new order.
 - 2026-11-15 — **The Android shell checks for updates at startup only** — no more re-check on every resume; opening the app is the moment an update is offered, tabbing back from the launcher is not.
 - 2026-11-15 — **The release strategy revolves around GitHub** (ST-126) — the pipelines own every artifact: `release.yml` builds the GHCR image and the signed APK, deploys are a pinned `compose pull` of the release image, and the in-app update serves the CI-built APK. Local APK builds and source-image deploys are retired (strategy in `docs/RELEASES.md`).
+
+### Removed
+- 2026-11-16 — **The in-app bug report button is retired** (ST-108) — the 🐞 leaves the sidebar foot, the top bar, the player dock and the phone More sheet: bugs are reported as **GitHub issues** (the repo ships issue templates). The Settings → Bug reports tab stays for triaging reports already submitted; the user guide points at GitHub now.
 
 ---
 

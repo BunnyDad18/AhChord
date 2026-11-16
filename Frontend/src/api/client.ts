@@ -271,11 +271,6 @@ export function apiDetectKey(id: string): Promise<DetectedKey> {
   return request<DetectedKey>(`/songs/${id}/detect-key`, { method: 'POST' });
 }
 
-/** ST-35 H2: send an in-app bug report (appended to /data/bug_reports.md on the server). */
-export function apiBugReport(message: string): Promise<{ ok: boolean }> {
-  return request<{ ok: boolean }>('/bug-reports', { method: 'POST', body: { message } });
-}
-
 /** ST-35 F3: start a full-library metadata scan (background job). */
 export function apiScanMetadata(): Promise<{ started: boolean }> {
   return request<{ started: boolean }>('/songs/metadata-review', { method: 'POST' });

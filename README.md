@@ -19,7 +19,6 @@ everyone follows the same song, in the same key, live.
 
 AhChord is free and open source (MIT). It is built to help bands organise their music using their own servers. If you would like to support the developer and see continued development please consider donating, a coffee helps:
 
-[![PayPal](https://img.shields.io/badge/PayPal-Donate-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.biz/bunnydad18)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Donate-FF5E5B?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/bunnycodingdev)
 
 ## Screenshots

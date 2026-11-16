@@ -1,6 +1,6 @@
 /* Bug report (2026-11-12): full-screen toggle — the header/sidebar icon-button
-   scale, like the bug-report button beside it. Contexts (sidebar foot, top bar,
-   player dock) pass their own class to match their neighbours' sizing. */
+   scale. Contexts (sidebar foot, top bar, player dock) pass their own class to
+   match their neighbours' sizing. */
 .btn {
   background: none;
   border: 1px solid var(--border);

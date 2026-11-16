@@ -139,7 +139,7 @@
 }
 
 /* Bug report #82: the foot is activity + a row of square icon buttons
-   (theme · report a bug · account) — no full-width buttons. 2026-11-09:
+   (theme · full screen · account) — no full-width buttons. 2026-11-09:
    space-between spreads the three to the links' full width (they used to
    clump left, leaving a 53px dead zone right of the avatar). */
 .sideRow {
@@ -930,8 +930,6 @@
     display: none;
   }
 }
-
-/* ST-36 C1: the bug report dialog moved to BugReport.module.css (shared with the player). */
 
 /* Mobile: every tappable target >= 44px (ST-17/ST-26). */
 @media (max-width: 639px) {

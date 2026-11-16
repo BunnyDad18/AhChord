@@ -36,9 +36,11 @@ unless you point the URL at a cloud endpoint.
 
 ## Bug reports
 
-Everyone sees the list; **Report a bug** (the footer button, and this tab)
-submits one with app context attached. Resolved items are marked and visible —
-the admin triages them (on a gated public instance, triage is admin-only).
+Bugs are reported on GitHub: **[file an issue](https://github.com/BunnyDad18/AhChord/issues/new)**
+— the template asks for what you did, what happened, and what you expected. The
+old in-app **Report a bug** button was retired 2026-11-16; this tab lists the
+reports submitted through it before that, and the admin marks resolved ones (on
+a gated public instance, triage is admin-only).
 
 ## About
 

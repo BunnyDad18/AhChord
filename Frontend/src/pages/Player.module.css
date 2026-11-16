@@ -312,7 +312,7 @@
   border-color: var(--secondary);
 }
 
-/* Hovered buttons keep their resting background (kills the BugReport fill);
+/* Hovered buttons keep their resting background (kills the icon-button fill);
    the filled primary (Random) keeps its fill + brightness lift. */
 .transport > [class*="btn"]:not([class*="primary"]):hover,
 .dockTools > [class*="btn"]:not([class*="primary"]):hover {
