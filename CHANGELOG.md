@@ -13,7 +13,15 @@ All notable changes to **AhChord** are documented in this file. The format is ba
 
 ## [Unreleased]
 
+_(empty — new work lands here)_
+
+---
+
+## [0.5.1] - 2026-11-16
+
 ### Fixed
+- 2026-11-16 — **Pages goes green — the docs site's scaffolding was never committed** (ST-129) — `docs/site/package.json` and its lockfile were untracked, so the Pages workflow's `npm ci` had nothing to install and its first run on main died in `setup-node`. VitePress `^1.6.3` + the lockfile are committed; the site builds clean (dead-link check included).
+- 2026-11-16 — **ST-128 — the publish script addresses the right repo on ssh remotes** — the PR-slug parse dropped the owner (`git@github.com:OWNER/REPO` → `REPO`), so the auto-open PR call and the printed compare URL pointed at an ownerless repo. Also in the same change: **`--name <slug>`** gives publish branches descriptive names (1–3 words, carrying the GitHub ticket id when the batch ties to one; timestamp on collision), and the PR token can live in **`~/.config/ahchord/publish-github.token`** (outside the repo, chmod 600) so publishing opens the PR unattended.
 - 2026-11-15 — **Release publishing survives tag moves** — the release job now deletes any existing release for the tag before creating its own; moving a pre-release tag used to race GitHub's release re-creation and fail the publish step (`gh release create: already exists`).
 - 2026-11-15 — **API suite no longer flakes on CI** — Hangfire's static log provider could outlive a disposed test host and poison a later fixture's job enqueues with `ObjectDisposedException: LoggerFactory` (500s from `POST /api/songs` in `SongTagEndpointsTests`). The fixture now releases the binding on dispose (the AHC-9 static-side-effect class, test seam).
 
