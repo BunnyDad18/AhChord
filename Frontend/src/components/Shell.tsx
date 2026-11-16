@@ -9,7 +9,6 @@ import { onReconnected } from '../realtime/sessionClient';
 import { initNetwork } from '../stores/network';
 import { syncLibrary } from '../offline/sync';
 import { OfflineBanner } from './OfflineBanner';
-import { BugReport } from './BugReport';
 import { FullscreenToggle } from './FullscreenToggle';
 import { ActivityProgress } from './ActivityProgress';
 import { BottomNav } from './BottomNav';
@@ -242,8 +241,9 @@ export function Shell() {
 
         {/* Bug report #81/#82: activity above a horizontal row of square icon
             buttons. Bug report #107: the chevron led this row; the 2026-11-09
-            pass moved it out of the row onto the sidebar's edge (below) —
-            the row is theme · report a bug · account. */}
+            pass moved it out of the row onto the sidebar's edge (below);
+            2026-11-16 retired the bug report — the row is theme · full screen ·
+            account. */}
         <div className={styles.sideFoot}>
           <span className={styles.sideActivity}>
             <ActivityProgress />
@@ -260,7 +260,6 @@ export function Shell() {
             </button>
             {/* Bug report (2026-11-12): full-screen toggle (the browser bar disappears). */}
             <FullscreenToggle className={styles.sideIcon} />
-            <BugReport />
             <UserMenu />
           </div>
           {/* James: the current app version, bottom-left of the sidebar (the
@@ -332,12 +331,6 @@ export function Shell() {
                 it at ≥1024px, the top bar below that. */}
             <span className={styles.wideHidden}>
               <FullscreenToggle />
-            </span>
-
-            {/* ST-35 H2 / ST-36 C1: in-app bug report (shared component — also on the player).
-                Bug report #81: at ≥1024px the sidebar foot carries it instead. */}
-            <span className={styles.wideHidden}>
-              <BugReport />
             </span>
 
             {/* ST-70a: the account menu (avatar → name, Settings, light/dark, Sign out).

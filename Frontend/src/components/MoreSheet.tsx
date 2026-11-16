@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PHONE_QUERY, useMediaQuery } from '../hooks/media';
 import { useAuthStore } from '../stores/auth';
 import { useUiStore } from '../stores/ui';
-import { GearIcon, MoonIcon, SignOutIcon, SunIcon, BugIcon } from './Icons';
-import { BugReport } from './BugReport';
+import { GearIcon, MoonIcon, SignOutIcon, SunIcon } from './Icons';
 import styles from './Shell.module.css';
 
 /**
  * ST-70d: the phone account sheet — the avatar tab's sheet. ST-75: Home and
  * Import became bottom tabs (sidebar parity), so what remains is the account
  * header, Settings, the light/dark toggle, Sign out.
- * Report (2026-11-12, "can't see button to enter bug report on song page"):
- * the sheet carries a LABELED "Report a bug" row — the top-bar icon alone was
- * easy to miss on phones.
+ * (2026-11-16: the ST-105 "Report a bug" row is gone — bugs go to GitHub
+ * issues, so the sheet is back to account · Settings · theme · Sign out.)
  */
 export function MoreSheet() {
   const phone = useMediaQuery(PHONE_QUERY);
@@ -54,8 +52,6 @@ export function MoreSheet() {
           {theme === 'dark' ? <SunIcon size={16} /> : <MoonIcon size={16} />}
           {theme === 'dark' ? 'Light mode' : 'Dark mode'}
         </button>
-        {/* Report (2026-11-12): labeled bug-report row — closes the sheet, opens the dialog. */}
-        <BugReportItem close={close} />
         <button
           type="button"
           role="menuitem"
@@ -69,28 +65,6 @@ export function MoreSheet() {
           Sign out
         </button>
       </div>
-    </>
-  );
-}
-
-/** The sheet's labeled report row: the row is the trigger, the shared dialog follows. */
-function BugReportItem({ close }: { close: () => void }) {
-  const [reportOpen, setReportOpen] = useState(false);
-  return (
-    <>
-      <button
-        type="button"
-        role="menuitem"
-        className={styles.avatarItem}
-        onClick={() => {
-          close();
-          setReportOpen(true);
-        }}
-      >
-        <BugIcon size={16} />
-        Report a bug
-      </button>
-      {reportOpen && <BugReport hideTrigger />}
     </>
   );
 }

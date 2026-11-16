@@ -31,24 +31,6 @@ function Svg({ size = 20, className, children }: IconProps & { children: React.R
   );
 }
 
-/** 🐞 replacement — bug report. */
-export function BugIcon(props: IconProps) {
-  return (
-    <Svg {...props}>
-      {/* body */}
-      <path d="M12 8a4 4 0 0 1 4 4v3a4 4 0 0 1-8 0v-3a4 4 0 0 1 4-4z" />
-      {/* antennae */}
-      <path d="M9.5 6.5 8 4.5" />
-      <path d="m14.5 6.5 1.5-2" />
-      {/* legs */}
-      <path d="M8 11H5.5" />
-      <path d="M8 15l-2.5 1.5" />
-      <path d="M16 11h2.5" />
-      <path d="m16 15 2.5 1.5" />
-    </Svg>
-  );
-}
-
 /** ☀ replacement — switch to light mode. */
 export function SunIcon(props: IconProps) {
   return (

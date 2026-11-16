@@ -15,7 +15,6 @@ import { OfflineIndicator } from '../components/OfflineBanner';
 import { useToastStore } from '../stores/toast';
 import { useSessionActivityStore } from '../stores/sessionActivity';
 import { useTransposeStore } from '../stores/transpose';
-import { BugReport } from '../components/BugReport';
 import { FullscreenToggle } from '../components/FullscreenToggle';
 import { ChevronIcon, EditIcon, ShuffleIcon, UsersIcon, XIcon } from '../components/Icons';
 import { KeyCapoControl } from '../components/KeyCapoControl';
@@ -962,11 +961,6 @@ export default function Player({ mode }: PlayerProps) {
           <ColumnsControl value={columns} onChange={setColumns} size="sm" />
           {/* Bug report (2026-11-12): full-screen — the browser bar disappears. */}
           <FullscreenToggle className={styles.fsBtn} />
-          {/* ST-36 C1 / ST-39 D1: bug report from the player carries the song as
-              context (ST-84 polish: moved from the top bar into the dock). */}
-          <BugReport
-            context={`player — ${songTitle}${songData?.song.artist ? ` by ${songData.song.artist}` : ''}`}
-          />
           {/* ST-51 #1: edit button on the player — same target as the song page's
               Edit (ST-84 polish: icon-only on phones, one-row bar). */}
           {songReady && currentSongId && (
