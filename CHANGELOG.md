@@ -13,7 +13,10 @@ All notable changes to **AhChord** are documented in this file. The format is ba
 
 ## [Unreleased]
 
-_(empty — new work lands here)_
+### Fixed
+- 2026-11-16 — **Pages: the docs site builds from scratch** (ST-129 wave 2) — on a cold tree the root-level pages (`index.md`, `SECURITY.md`) import bare `vue` / `vue/server-renderer`, which cannot resolve from the repo root, and the Pages build died (`Rollup failed to resolve import "vue/server-renderer" from SECURITY.md`). The site had never built clean anywhere — the dev box's state masked it; reproduced on the published tree tarball. `config.mts` now aliases both specifiers to the site's own vue, verified from zero.
+
+_(rest below)_
 
 ---
 

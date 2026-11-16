@@ -38,7 +38,17 @@ export default defineConfig({
   // the user guide, deployment guide, screenshots and prompts under docs/.
   srcDir: '../../',
   // The front-page hero + favicon are served from the site root (see the copy plugin).
+  // Root-level pages (index.md, SECURITY.md) import bare 'vue' / 'vue/server-renderer'
+  // (compiled vnodes) — their importers sit at the repo root, OUTSIDE docs/site/node_modules,
+  // so both specifiers are aliased to the site's own vue (ST-129: a cold-cache build fails
+  // without this; the dev box's warm dep cache hid it since ST-114).
   vite: {
+    resolve: {
+      alias: [
+        { find: /^vue$/, replacement: fileURLToPath(new URL('../node_modules/vue/dist/vue.runtime.esm-bundler.js', import.meta.url)) },
+        { find: /^vue\/server-renderer$/, replacement: fileURLToPath(new URL('../node_modules/@vue/server-renderer/dist/server-renderer.esm-bundler.js', import.meta.url)) },
+      ],
+    },
     plugins: [copySiteRootImages],
   },
   cleanUrls: true,
